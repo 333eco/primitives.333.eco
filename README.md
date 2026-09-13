@@ -63,11 +63,47 @@ beacon is reachable.
 Who gets onto the roster, and whether a turn can be kept, traded or bought. Both
 belong to the surface using it. See `SPEC.md` §0 and §9.
 
+### v2 — for draws worth something
+
+`@333eco/primitives/b-call/v2`
+
+Use v2 for a benefit, an income, a sealed order, or a roster that changes between
+rounds. The draw comes from the whole beacon output. One commitment binds the round,
+the roster, the previous round's closer and a lot's admit count. Each round has its own
+frozen roster, and the boundary rule keeps positions uniform.
+
+```js
+import { commit, draw, verify, roundAt, QUICKNET, newSalt } from "@333eco/primitives/b-call/v2";
+
+const input = {
+    network: QUICKNET.hash,
+    round: roundAt(QUICKNET, Date.now() / 1000) + 100, // a round ~5 minutes ahead
+    drawId: "rider-dispatch/2026-09-14/round-1",
+    form: "turn",
+    regime: "public",
+    salt: newSalt(),
+    roster: ["amara", "bopha", "chen", "dara"], // frozen for this round
+    previousLast: null // next round: the last id of this round's order
+};
+
+const commitment = await commit(input); // publish now, before the round is emitted
+// …once drand publishes the round:
+const { order, boundarySwapped } = await draw(input, randomnessOfThatRound);
+// …and anyone holding the published commitment and inputs:
+await verify(commitment, input, randomnessOfThatRound);
+```
+
+A sealed draw publishes only the commitment. Its inputs go to the verifying quorum,
+encrypted to them and then time-locked to the reset round. Never publish its salt.
+See `SPEC.md` §17.
+
 ## Conformance
 
-[`SPEC.md`](./SPEC.md) is normative, with Swift and Kotlin ports of the
-generator, and [`vectors/b-call-vectors.json`](./vectors/b-call-vectors.json) is
-authoritative for every implementation — including this one.
+[`SPEC.md`](./SPEC.md) is normative — Part I for v1 (with Swift and Kotlin ports of
+the generator), Part II for v2 — and [`vectors/`](./vectors/) is authoritative for
+every implementation, including this one. For v2, `scripts/port_check.py`
+reimplements the draw from the spec alone in Python's standard library and must
+reproduce every vector.
 
 ```js
 import vectors from "@333eco/primitives/b-call/vectors.json" with { type: "json" };

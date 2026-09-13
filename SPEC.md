@@ -19,6 +19,9 @@ rotation only its operator can compute is indistinguishable from a ranking its
 operator declines to describe, and the difference between the two is exactly
 what recomputation makes visible.
 
+**Part I (§0–§10) is v1, the sey-compatible form. Part II (§11–§19) is v2 — use it for
+anything worth something.**
+
 **This document is normative. Do not reimplement from reading the TypeScript.**
 Sections 1–3 are lifted unchanged from sey's caller contract (`@333eco/sey`,
 `caller-spec.md`, published 2026-09-01), and the test suite checks the reference
@@ -239,8 +242,7 @@ anything anonymous bind?**
 ⛔ **v1 cannot yet deliver the sealed regime operator-independently.** A bare
 beacon seed is public, so a sealed order needs a secret in the seed; v1 offers
 no way to combine one with a beacon, which leaves only (b) — and (b) fails where
-the operator admits the roster. The construction a sealed regime needs is in
-§10. Also: publish counts **only at round boundaries** — a count that ticks per
+the operator admits the roster. **Use v2 — Part II, §17.** Also: publish counts **only at round boundaries** — a count that ticks per
 turn in-season names each recipient, while a bag's counts at a boundary are all
 equal and say nothing.
 
@@ -316,29 +318,186 @@ of an old one.
 - **A lot whose entry carries a price may be a lottery in law** — consideration,
   chance and a prize. Take advice before charging for an entry into a lot.
 
-## 10. What v1 is, and what a v2 must add
+## 10. What v1 is for
 
 **v1 is the sey-compatible form.** Its generator, shuffle and bag are bound
 byte-for-byte to a contract already published and in use, so it can never change.
-It is sound for **play-order** draws and for **public** draws with a fixed roster
-and a beacon seed. It is **not sufficient** for the sealed regime or for a
-recurring benefit with a live roster. A v2 — a new seed version and a new
-commitment prefix, never an edit of v1 — would need, at least:
+It is sound for **play-order** draws and for **public** draws over a fixed roster
+with a beacon seed. **For anything worth something — a benefit, an income, a
+sealed order, a roster that changes between rounds — use v2 (Part II).**
 
-1. **A draw derived from the full beacon output**, not its first four bytes:
-   HMAC-SHA-256 in counter mode (as in RFC 3797's successor work) or a
-   swap-or-not shuffle, with rejection sampling for indices and domain-separated
-   streams. This removes the bias, the seed recovery and the lagged stream at once.
-2. **A roster frozen per round**, each round's seed from a beacon round named at
-   that round's cutoff; absence recorded as a skip, never as removal from the
-   shuffle input; the change log committed.
-3. **One commitment binding** beacon network, round number, algorithm version and
-   roster, timestamped before the round is emitted.
-4. **For the sealed regime:** `seed = H(domain ‖ beacon round ‖ salt)` with
-   `H(salt)` committed before the roster closes — the operator knows the salt,
-   never the seed, while the roster is open — and the salt time-locked to the
-   reset round so the reveal cannot be withheld.
-5. **A boundary rule that keeps positions uniform** — e.g. swapping a colliding
-   opener with a uniformly drawn later position instead of rotating it to the end.
+---
 
-None of this is specified or built yet.
+# Part II — v2
+
+`@333eco/primitives/b-call/v2`. A new version, not an edit: no v1 output changes.
+Every rule below answers a finding of the 2026-09-13 prior-art census, and a second
+implementation written from this Part alone (`scripts/port_check.py`, Python standard
+library) reproduces every v2 vector.
+
+## 11. Encoding
+
+All integers are big-endian. Every variable-length value is **length-prefixed**, so no
+two different inputs share an encoding and no text-escaping rules are needed.
+
+```
+u32(n)      4 bytes          u64(n)      8 bytes
+field(b)    u32(len(b)) ‖ b
+str(s)      field(UTF-8(s))
+bytes(h)    field(hex-decode(h))
+list(ids)   u32(count) ‖ str(id₁) ‖ … ‖ str(idₙ)
+```
+
+## 12. The commitment
+
+```
+C = SHA-256( str("b-call/v2/commitment")
+           ‖ str(lowercase(network))       # beacon chain hash, hex
+           ‖ u64(round)                    # the beacon round, named now, emitted later
+           ‖ str(drawId)                   # unique per draw
+           ‖ str(form)                     # "turn" | "lot"
+           ‖ str(regime)                   # "public" | "sealed"
+           ‖ bytes(salt)                   # ≥ 32 bytes
+           ‖ list(roster)                  # ordered, unique, non-empty ids
+           ‖ str(form == "turn" ? previousLast or "" : "")
+           ‖ u32(form == "lot" ? admit : 0) )
+```
+
+Publish `C` **before** `roundTime(round)` (§16), to a log that is append-only and
+timestamped. **One commitment per `drawId`; the first published binds.** A second
+commitment for the same id is a redraw, and a redraw is published beside the draw it
+replaces with its reason (§19).
+
+Everything a late choice could otherwise steer is inside `C`: the round, the roster
+and its order, the previous round's closer, and — for a lot — how many are admitted.
+A tier boundary set after the order is known is a choice; here it is fixed first.
+
+## 13. The key and the streams
+
+```
+K  = SHA-256( str("b-call/v2/key") ‖ bytes(C) ‖ bytes(randomness) ‖ bytes(salt) )
+Sₗ = HMAC-SHA-256( key = K,  msg = str("b-call/v2/stream") ‖ str(label) )
+Bᵢ = HMAC-SHA-256( key = Sₗ, msg = u64(i) )          # i = 0, 1, 2, …
+```
+
+A stream yields the 32-byte blocks `B₀, B₁, …` as consecutive big-endian `u32`
+values, eight per block. The draw uses the stream labelled `"order"`.
+
+Because `C` is inside `K`, two draws that share a beacon round and a roster but differ
+in any committed field — above all `drawId` — get unrelated orders.
+
+## 14. A uniform index
+
+```
+uniform(m):                       # an integer in [0, m), 1 ≤ m ≤ 2³²
+    limit := 2³² − (2³² mod m)
+    repeat: x := next u32 of the stream
+    until x < limit
+    return x mod m
+```
+
+Rejection, not reduction: `x mod m` alone would favour small values.
+
+## 15. The draw
+
+```
+order := copy(roster)
+for i from n − 1 down to 1:
+    j := uniform(i + 1)
+    swap order[i], order[j]
+
+if form == "turn" and previousLast is set and n > 1 and order[0] == previousLast:
+    j := 1 + uniform(n − 1)                 # the same stream, continuing
+    swap order[0], order[j]                 # boundarySwapped := true
+
+if form == "lot": admitted := order[0 .. admit)
+```
+
+**The boundary rule is a SWAP with a uniformly drawn later position.** The result is
+exactly uniform over the orders that do not open with the previous closer: that member
+lands in each of positions 1 … n−1 with probability 1/(n−1), and every other member
+opens with probability 1/(n−1). Measured in the suite at n = 4: the closer is last
+33.2% of the time, against v1's 50%.
+
+## 16. Seasons, rosters and skips
+
+A recurring benefit is a **season of rounds**, and each round is its own draw:
+
+- its **roster is frozen** at that round's cutoff and committed with it;
+- its **beacon round** is named at that cutoff, far enough ahead that `C` is published
+  before `roundTime(round) = genesisTime + (round − 1) × period`;
+- its `previousLast` is the **final id of the previous round's committed order** — taken
+  from the order, never from who was actually served.
+
+A member who is **absent** when their turn comes is a recorded **skip**: the turn
+lapses. Absence is **never** a removal from the round's shuffle input, and nothing
+about who was present reaches any later round except through that round's own frozen
+roster. A member who joins or leaves does so at the next cutoff.
+
+## 17. The two regimes
+
+The algorithm is identical; the regime decides **what is disclosed, to whom, and when.**
+
+| | **Public** | **Sealed** |
+| --- | --- | --- |
+| At commit | `C`, and the salt, roster and fields beside it | `C` only — plus the sealed reveal below |
+| After the round | anyone runs `verify` | nobody outside the quorum can compute the order: the salt is inside the key |
+| At the reset | — | the **quorum** receives the reveal and runs `verify` |
+| Counts | may be public at any time | **only at round boundaries**, where a bag's counts are all equal and say nothing |
+
+**The sealed reveal**, published beside `C`: the draw's inputs (salt, roster and the
+committed fields), **encrypted to the quorum's recipients first, then time-locked to
+the reset round** with drand's `tlock` (the `age` format; `tlock-js` or the `tle`
+command). After the reset round anyone can remove the time lock, and only the quorum
+can read what is inside — so the reveal **cannot be withheld from the quorum**, and is
+**never published to everyone.**
+
+⛔ **Never publish a sealed draw's salt.** `C` plus the salt lets anyone who can guess
+the roster confirm the guess, and then compute the whole order — which identifies,
+after the fact, exactly the anonymous gifts the sealed regime exists to protect.
+
+*Tested 2026-09-13 against quicknet: a value time-locked to a round ~9 seconds ahead
+was refused before that round ("too early to decrypt") and recovered exactly after it.
+This package does not bundle `tlock-js`, which would add five runtime dependencies.*
+
+## 18. Beacon checks
+
+- `roundTime(chain, round)` and `roundAt(chain, t)` — `genesisTime + (round − 1) × period`
+  and its inverse. quicknet: genesis 1692803367, period 3 s.
+- `randomnessMatchesSignature(randomness, signature)` — for drand's unchained schemes
+  `randomness = SHA-256(signature)`. **This is consistency, not authenticity.** Verifying
+  the BLS signature against the chain's public key is outside this package; a surface
+  holding value should do it with drand's client or cross-check two relays.
+
+## 19. Conformance, ports and limits
+
+`vectors/b-call-v2-vectors.json` carries four consecutive real quicknet rounds
+(1,000,000–1,000,003) and: a four-round public **season** with a roster change and
+chained closers · a round in which the **boundary swap fires** · a **sealed** turn · lots
+admitting 0, 3 and 10 of 10 · 20 raw stream values · a round time. `scripts/port_check.py`
+recomputes all of it from this Part and then requires five broken ports to fail (v1's
+rotation · a commitment without the round · little-endian stream decoding · modulo with
+no rejection · an admit count changed after commit).
+
+Ports: Swift `CryptoKit` (`SHA256.hash`, `HMAC<SHA256>.authenticationCode`) · Kotlin/JVM
+`MessageDigest("SHA-256")`, `Mac("HmacSHA256")` · Python `hashlib`, `hmac`.
+
+**What v2 does not settle:**
+
+- **Admission, classification and tier rules** are still choices. Publish them before
+  entries open; one entry per verified principal is the surface's guard (v2 refuses a
+  duplicate id, not a duplicate person).
+- **The commitment log is a rule.** "One commitment per id, first published binds" and
+  "published before the round" need an append-only, timestamped log and someone who
+  reads it. v2 computes; it cannot see what was never published.
+- **The sealed regime rests on a quorum** that is present and honest at the reset. The
+  time lock stops the reveal being withheld from it, not the quorum from lying.
+- **A beacon threshold that colludes can predict rounds** (never bias them). Where that
+  matters, combine two independent beacons.
+- **A skip costs the absent member their turn.** That is the non-storability rule working,
+  and it means served turns are equal only among those present.
+- **The boundary rule has a price:** the previous closer's average position is slightly
+  later than everyone else's. No rule can forbid back-to-back turns for free.
+- **Not yet reviewed by an outside cryptographer.** The independent port is by the same
+  author as the reference, which makes it a check on the spec's sufficiency, not a second
+  opinion on the design.

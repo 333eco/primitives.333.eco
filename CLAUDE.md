@@ -22,6 +22,13 @@ do: it serves every body and names none.
   measured 0.086% position gradient, a seed recoverable from ~7 turns, and a
   "second stream" that is a lagged copy (min 7,179 draws). A fix is v2 — a new
   seed version — and waits on the founder's ruling (roadmap A128(c)).
+- ⭐ **v2 (`src/b-call-v2.ts`, SPEC Part II) is the form for value** — whole-beacon HMAC
+  stream, one binding commitment, per-round frozen rosters, a uniform boundary SWAP.
+  `scripts/port_check.py` is its independent port and runs in `npm test`; ⛔ never
+  "fix" a vector to match the TS without the port agreeing. ⛔ **Never publish a sealed
+  draw's salt** (C + salt confirms a guessed roster). tlock is NOT bundled (5 deps).
+- ⚠️ **Mutation-test with an apply check** — a mutation whose anchor is absent from
+  `dist/` leaves the file unchanged and reads as a pass.
 - ⚠️ **Regenerate vectors after any src change** (`npm run vectors`); CI fails
   on a stale vector file.
 - ⚠️ **Break it on purpose before trusting a green suite.** The known-failure

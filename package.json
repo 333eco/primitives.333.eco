@@ -37,7 +37,12 @@
             "types": "./dist/b-call.d.ts",
             "default": "./dist/b-call.js"
         },
+        "./b-call/v2": {
+            "types": "./dist/b-call-v2.d.ts",
+            "default": "./dist/b-call-v2.js"
+        },
         "./b-call/vectors.json": "./vectors/b-call-vectors.json",
+        "./b-call/v2/vectors.json": "./vectors/b-call-v2-vectors.json",
         "./b-call/SPEC.md": "./SPEC.md",
         "./package.json": "./package.json"
     },
@@ -53,7 +58,7 @@
     "scripts": {
         "build": "rm -rf dist && tsc -p tsconfig.json",
         "vectors": "npm run build && node scripts/generate-vectors.mjs",
-        "test": "npm run build && node --test test/b-call.test.mjs",
+        "test": "npm run build && node --test test/b-call.test.mjs test/b-call-v2.test.mjs && python3 scripts/port_check.py",
         "prepublishOnly": "npm test"
     },
     "devDependencies": {

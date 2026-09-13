@@ -1,0 +1,383 @@
+{
+  "license": "CC0-1.0",
+  "spec": "SPEC.md, Part II",
+  "generatedFrom": "src/b-call-v2.ts",
+  "note": "Authoritative. Regenerate with `npm run vectors`. scripts/port_check.py recomputes every case from the spec alone, in Python's standard library.",
+  "chain": {
+    "hash": "52db9ba70e0cc0f6eaf7803dd07447a1f5477735fd3f661792ba94600c84e971",
+    "genesisTime": 1692803367,
+    "period": 3,
+    "scheme": "bls-unchained-g1-rfc9380"
+  },
+  "rounds": {
+    "1000000": {
+      "randomness": "b22aad4794f7451896f7a371aa46106fd84d919f3f569acd5b2fddf1d1440af3",
+      "signature": "83ad29e4c409f9470fc2ef02f90214df49e02b441a1a241a82d622d9f608ef98fd8b11a029f1bee9d9e83b45088abe72"
+    },
+    "1000001": {
+      "randomness": "9f45f439afd81e9846b3b4dc5e3e6051922c73c8459d18e9d507b52ddbd884ff",
+      "signature": "a5bd91e5e2d8c0bf51bffdfad87eef34348fd9c0b2df2bee39db90bdef7e1399b1a77bb2fe98b24d84c0936a306c4218"
+    },
+    "1000002": {
+      "randomness": "018e0e0c9e0d7906762eca633fab3ec5e97ee4cb8949e4eb9ee589160b49263d",
+      "signature": "a96e2a020098645aa4f912dcca317a67e98c39909fe1a037798fb503f04272b8153bab438c7e8d298593af1bdf29e5c5"
+    },
+    "1000003": {
+      "randomness": "4988431355480858aede82fe7af925d486ecf10253e175d4fa28c2e6512d14ea",
+      "signature": "876ae112d465a00683071570a37cc7d86bebbf9887cf133d4d6a64ae24e51a7059e85e2533b52f95f5368c166255c53d"
+    }
+  },
+  "cases": {
+    "season_public_turns": {
+      "note": "each round's previousLast is the last id of the round before; rosters are frozen per round",
+      "rounds": [
+        {
+          "input": {
+            "network": "52db9ba70e0cc0f6eaf7803dd07447a1f5477735fd3f661792ba94600c84e971",
+            "round": 1000000,
+            "drawId": "vector-season/round-1",
+            "form": "turn",
+            "regime": "public",
+            "salt": "1a37aef98991d2b7d39343058b28a4f1f2628375b706ff51511b486d31c60546",
+            "roster": [
+              "p0",
+              "p1",
+              "p2",
+              "p3",
+              "p4",
+              "p5"
+            ],
+            "previousLast": null
+          },
+          "randomness": "b22aad4794f7451896f7a371aa46106fd84d919f3f569acd5b2fddf1d1440af3",
+          "commitment": "f7b2eef467afec9399741948b9069333d1a646f407ed5d0c11993daa8d26f3d7",
+          "order": [
+            "p4",
+            "p5",
+            "p3",
+            "p2",
+            "p1",
+            "p0"
+          ],
+          "boundarySwapped": false
+        },
+        {
+          "input": {
+            "network": "52db9ba70e0cc0f6eaf7803dd07447a1f5477735fd3f661792ba94600c84e971",
+            "round": 1000001,
+            "drawId": "vector-season/round-2",
+            "form": "turn",
+            "regime": "public",
+            "salt": "b5a3fe209fe4817b86557eff4920375a4de46658b3e9176781435b08365bc8b8",
+            "roster": [
+              "p0",
+              "p1",
+              "p3",
+              "p4",
+              "p5",
+              "p6"
+            ],
+            "previousLast": "p0"
+          },
+          "randomness": "9f45f439afd81e9846b3b4dc5e3e6051922c73c8459d18e9d507b52ddbd884ff",
+          "commitment": "ef8a0fa69a2f6ea32a107e84d4aefa69989d4f917740429357d6ec401cbaaebc",
+          "order": [
+            "p1",
+            "p6",
+            "p5",
+            "p0",
+            "p3",
+            "p4"
+          ],
+          "boundarySwapped": false
+        },
+        {
+          "input": {
+            "network": "52db9ba70e0cc0f6eaf7803dd07447a1f5477735fd3f661792ba94600c84e971",
+            "round": 1000002,
+            "drawId": "vector-season/round-3",
+            "form": "turn",
+            "regime": "public",
+            "salt": "32527c481168b363c19047bf411a4637e418856669ec46a506ffbe6b67f533d1",
+            "roster": [
+              "p0",
+              "p1",
+              "p3",
+              "p4",
+              "p5",
+              "p6"
+            ],
+            "previousLast": "p4"
+          },
+          "randomness": "018e0e0c9e0d7906762eca633fab3ec5e97ee4cb8949e4eb9ee589160b49263d",
+          "commitment": "7ef9dbe9ce4d15df14552ea6411e86ec148edaf059ea9f58724375c4e092561f",
+          "order": [
+            "p3",
+            "p5",
+            "p1",
+            "p4",
+            "p0",
+            "p6"
+          ],
+          "boundarySwapped": false
+        },
+        {
+          "input": {
+            "network": "52db9ba70e0cc0f6eaf7803dd07447a1f5477735fd3f661792ba94600c84e971",
+            "round": 1000003,
+            "drawId": "vector-season/round-4",
+            "form": "turn",
+            "regime": "public",
+            "salt": "0b6aedd8ee1dba083727f87d65dfcd5451669458a309df0953b161b20a277fd1",
+            "roster": [
+              "p0",
+              "p1",
+              "p2",
+              "p3",
+              "p4",
+              "p5",
+              "p6"
+            ],
+            "previousLast": "p6"
+          },
+          "randomness": "4988431355480858aede82fe7af925d486ecf10253e175d4fa28c2e6512d14ea",
+          "commitment": "79c90cde94b6aae9ed4e83624d30b0f7912e293efee59c936b383330b7fddb28",
+          "order": [
+            "p3",
+            "p5",
+            "p2",
+            "p4",
+            "p0",
+            "p1",
+            "p6"
+          ],
+          "boundarySwapped": false
+        }
+      ]
+    },
+    "turn_boundary_swap": {
+      "note": "first salt index 1 whose round opened with the previous closer",
+      "input": {
+        "network": "52db9ba70e0cc0f6eaf7803dd07447a1f5477735fd3f661792ba94600c84e971",
+        "round": 1000001,
+        "drawId": "vector-boundary",
+        "form": "turn",
+        "regime": "public",
+        "salt": "46971f4041ba314dca198eec6056d11e3d7b3903c25e9b9a10fa273c05185314",
+        "roster": [
+          "p0",
+          "p1",
+          "p2",
+          "p3"
+        ],
+        "previousLast": "p3"
+      },
+      "randomness": "9f45f439afd81e9846b3b4dc5e3e6051922c73c8459d18e9d507b52ddbd884ff",
+      "commitment": "7194089ba7df7c6f8967d5c87760803f623d65a3366247bc9493fa75a6e37ebc",
+      "order": [
+        "p1",
+        "p2",
+        "p0",
+        "p3"
+      ],
+      "boundarySwapped": true
+    },
+    "turn_sealed": {
+      "note": "published at commit: the commitment only. Revealed at the reset: salt and roster.",
+      "input": {
+        "network": "52db9ba70e0cc0f6eaf7803dd07447a1f5477735fd3f661792ba94600c84e971",
+        "round": 1000003,
+        "drawId": "vector-sealed",
+        "form": "turn",
+        "regime": "sealed",
+        "salt": "796db35dbde7aa1646c2d1c61d50415f1d645a581397d935fc1ae47c68003336",
+        "roster": [
+          "p0",
+          "p1",
+          "p2",
+          "p3",
+          "p4",
+          "p5",
+          "p6",
+          "p7",
+          "p8"
+        ],
+        "previousLast": null
+      },
+      "randomness": "4988431355480858aede82fe7af925d486ecf10253e175d4fa28c2e6512d14ea",
+      "commitment": "431c4f519b9832027f95721f6f5a861ef31ae41f6189591efff1cd3e690c7ebe",
+      "order": [
+        "p7",
+        "p1",
+        "p3",
+        "p6",
+        "p2",
+        "p0",
+        "p4",
+        "p8",
+        "p5"
+      ],
+      "boundarySwapped": false
+    },
+    "lot_admit_0": {
+      "input": {
+        "network": "52db9ba70e0cc0f6eaf7803dd07447a1f5477735fd3f661792ba94600c84e971",
+        "round": 1000002,
+        "drawId": "vector-lot-admit-0",
+        "form": "lot",
+        "regime": "public",
+        "salt": "de26bb8f6594d91f3d633b3581cf71e00e2c593ccc9465e9d67e783de22d1789",
+        "roster": [
+          "p0",
+          "p1",
+          "p2",
+          "p3",
+          "p4",
+          "p5",
+          "p6",
+          "p7",
+          "p8",
+          "p9"
+        ],
+        "admit": 0
+      },
+      "randomness": "018e0e0c9e0d7906762eca633fab3ec5e97ee4cb8949e4eb9ee589160b49263d",
+      "commitment": "b5e3a5334a86338aa4e70b78303fcd74faa268130894c3ac17f6fca6966e5397",
+      "order": [
+        "p9",
+        "p2",
+        "p7",
+        "p1",
+        "p0",
+        "p5",
+        "p8",
+        "p4",
+        "p6",
+        "p3"
+      ],
+      "admitted": []
+    },
+    "lot_admit_3": {
+      "input": {
+        "network": "52db9ba70e0cc0f6eaf7803dd07447a1f5477735fd3f661792ba94600c84e971",
+        "round": 1000002,
+        "drawId": "vector-lot-admit-3",
+        "form": "lot",
+        "regime": "public",
+        "salt": "1800ea5cc3705593a7daf1f7e4adf7dfd35b10c204a20890598dbef2ebe5d83a",
+        "roster": [
+          "p0",
+          "p1",
+          "p2",
+          "p3",
+          "p4",
+          "p5",
+          "p6",
+          "p7",
+          "p8",
+          "p9"
+        ],
+        "admit": 3
+      },
+      "randomness": "018e0e0c9e0d7906762eca633fab3ec5e97ee4cb8949e4eb9ee589160b49263d",
+      "commitment": "dd4e9b02052c74565cd31f86d3832c4eb3cf29b277a9ca93dc279812b36ea6d9",
+      "order": [
+        "p7",
+        "p8",
+        "p5",
+        "p2",
+        "p0",
+        "p3",
+        "p4",
+        "p6",
+        "p1",
+        "p9"
+      ],
+      "admitted": [
+        "p7",
+        "p8",
+        "p5"
+      ]
+    },
+    "lot_admit_10": {
+      "input": {
+        "network": "52db9ba70e0cc0f6eaf7803dd07447a1f5477735fd3f661792ba94600c84e971",
+        "round": 1000002,
+        "drawId": "vector-lot-admit-10",
+        "form": "lot",
+        "regime": "public",
+        "salt": "3e3f70724dac134e9e18cffcc68fc793913dfe707396f6521b0c9d9dd969f71c",
+        "roster": [
+          "p0",
+          "p1",
+          "p2",
+          "p3",
+          "p4",
+          "p5",
+          "p6",
+          "p7",
+          "p8",
+          "p9"
+        ],
+        "admit": 10
+      },
+      "randomness": "018e0e0c9e0d7906762eca633fab3ec5e97ee4cb8949e4eb9ee589160b49263d",
+      "commitment": "e66cdc285f90f9cfae380e2bbd922e3a1f06e16f16dcba964d001b54bc9313a3",
+      "order": [
+        "p4",
+        "p7",
+        "p0",
+        "p9",
+        "p5",
+        "p3",
+        "p2",
+        "p6",
+        "p8",
+        "p1"
+      ],
+      "admitted": [
+        "p4",
+        "p7",
+        "p0",
+        "p9",
+        "p5",
+        "p3",
+        "p2",
+        "p6",
+        "p8",
+        "p1"
+      ]
+    },
+    "stream": {
+      "key": "904170a8219cd0bc69355bf288a24efbd55dee12eb675b34e152d724b8e7a3fa",
+      "label": "order",
+      "uint32": [
+        320572056,
+        3483462288,
+        3484067240,
+        550170244,
+        2248378092,
+        852516953,
+        2435998868,
+        2975220484,
+        3012738749,
+        2000747032,
+        778845399,
+        3085490711,
+        1526953427,
+        2805041632,
+        1852834923,
+        237591509,
+        1188004118,
+        2948186487,
+        4093942088,
+        1164797358
+      ]
+    },
+    "round_time": {
+      "chain": "quicknet",
+      "round": 1000000,
+      "unixSeconds": 1695803364
+    }
+  }
+}
