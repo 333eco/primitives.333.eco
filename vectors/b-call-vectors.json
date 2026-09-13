@@ -1,0 +1,812 @@
+{
+  "license": "CC0-1.0",
+  "spec": "SPEC.md",
+  "generatedFrom": "src/b-call.ts",
+  "note": "Authoritative. Regenerate with `npm run vectors`. prng and shuffle cases for seeds 1 and 123456789 are byte-identical to @333eco/sey@1.0.0 caller-vectors.json.",
+  "cases": {
+    "prng_seed_0": {
+      "seed": 0,
+      "uint32": [
+        1144304738,
+        1416247,
+        958946056,
+        627933444,
+        2007157716,
+        2340967985,
+        2642484575,
+        2787370982
+      ]
+    },
+    "prng_seed_1": {
+      "seed": 1,
+      "uint32": [
+        2693262067,
+        11749833,
+        2265367787,
+        4213581821,
+        4159151403,
+        1207330352,
+        2632122864,
+        3095568220
+      ]
+    },
+    "prng_seed_123456789": {
+      "seed": 123456789,
+      "uint32": [
+        1107202814,
+        4169434471,
+        3372958138,
+        885470128,
+        1301683845,
+        3208624240,
+        3344635568,
+        1221959552
+      ]
+    },
+    "prng_seed_4294967295": {
+      "seed": 4294967295,
+      "uint32": [
+        3850105811,
+        813802916,
+        3073704848,
+        4054706436,
+        3630262831,
+        2315588663,
+        2922715533,
+        2042566601
+      ]
+    },
+    "shuffle_n7_seed_1": {
+      "seed": 1,
+      "input": [
+        "a",
+        "b",
+        "c",
+        "d",
+        "e",
+        "f",
+        "g"
+      ],
+      "output": [
+        "b",
+        "f",
+        "g",
+        "d",
+        "c",
+        "a",
+        "e"
+      ]
+    },
+    "shuffle_n7_seed_123456789": {
+      "seed": 123456789,
+      "input": [
+        "a",
+        "b",
+        "c",
+        "d",
+        "e",
+        "f",
+        "g"
+      ],
+      "output": [
+        "c",
+        "g",
+        "e",
+        "a",
+        "d",
+        "f",
+        "b"
+      ]
+    },
+    "shuffle_n12_seed_7": {
+      "seed": 7,
+      "input": [
+        "a",
+        "b",
+        "c",
+        "d",
+        "e",
+        "f",
+        "g",
+        "h",
+        "i",
+        "j",
+        "k",
+        "l"
+      ],
+      "output": [
+        "h",
+        "k",
+        "d",
+        "f",
+        "b",
+        "i",
+        "c",
+        "e",
+        "g",
+        "j",
+        "l",
+        "a"
+      ]
+    },
+    "second_stream_seed_0": {
+      "seed": 0,
+      "secondStreamSeed": 2654435769
+    },
+    "second_stream_seed_1": {
+      "seed": 1,
+      "secondStreamSeed": 2654435768
+    },
+    "second_stream_seed_123456789": {
+      "seed": 123456789,
+      "secondStreamSeed": 2574038188
+    },
+    "second_stream_seed_4294967295": {
+      "seed": 4294967295,
+      "secondStreamSeed": 1640531526
+    },
+    "turns_n1_seed_1": {
+      "roster": [
+        "p0"
+      ],
+      "seed": 1,
+      "count": 6,
+      "turns": [
+        {
+          "id": "p0",
+          "roundStart": true
+        },
+        {
+          "id": "p0",
+          "roundStart": true
+        },
+        {
+          "id": "p0",
+          "roundStart": true
+        },
+        {
+          "id": "p0",
+          "roundStart": true
+        },
+        {
+          "id": "p0",
+          "roundStart": true
+        },
+        {
+          "id": "p0",
+          "roundStart": true
+        }
+      ]
+    },
+    "turns_n2_seed_7": {
+      "roster": [
+        "p0",
+        "p1"
+      ],
+      "seed": 7,
+      "count": 12,
+      "turns": [
+        {
+          "id": "p1",
+          "roundStart": true
+        },
+        {
+          "id": "p0",
+          "roundStart": false
+        },
+        {
+          "id": "p1",
+          "roundStart": true
+        },
+        {
+          "id": "p0",
+          "roundStart": false
+        },
+        {
+          "id": "p1",
+          "roundStart": true
+        },
+        {
+          "id": "p0",
+          "roundStart": false
+        },
+        {
+          "id": "p1",
+          "roundStart": true
+        },
+        {
+          "id": "p0",
+          "roundStart": false
+        },
+        {
+          "id": "p1",
+          "roundStart": true
+        },
+        {
+          "id": "p0",
+          "roundStart": false
+        },
+        {
+          "id": "p1",
+          "roundStart": true
+        },
+        {
+          "id": "p0",
+          "roundStart": false
+        }
+      ]
+    },
+    "turns_n3_seed_7": {
+      "roster": [
+        "p0",
+        "p1",
+        "p2"
+      ],
+      "seed": 7,
+      "count": 24,
+      "turns": [
+        {
+          "id": "p1",
+          "roundStart": true
+        },
+        {
+          "id": "p2",
+          "roundStart": false
+        },
+        {
+          "id": "p0",
+          "roundStart": false
+        },
+        {
+          "id": "p1",
+          "roundStart": true
+        },
+        {
+          "id": "p2",
+          "roundStart": false
+        },
+        {
+          "id": "p0",
+          "roundStart": false
+        },
+        {
+          "id": "p2",
+          "roundStart": true
+        },
+        {
+          "id": "p0",
+          "roundStart": false
+        },
+        {
+          "id": "p1",
+          "roundStart": false
+        },
+        {
+          "id": "p2",
+          "roundStart": true
+        },
+        {
+          "id": "p0",
+          "roundStart": false
+        },
+        {
+          "id": "p1",
+          "roundStart": false
+        },
+        {
+          "id": "p0",
+          "roundStart": true
+        },
+        {
+          "id": "p2",
+          "roundStart": false
+        },
+        {
+          "id": "p1",
+          "roundStart": false
+        },
+        {
+          "id": "p2",
+          "roundStart": true
+        },
+        {
+          "id": "p0",
+          "roundStart": false
+        },
+        {
+          "id": "p1",
+          "roundStart": false
+        },
+        {
+          "id": "p0",
+          "roundStart": true
+        },
+        {
+          "id": "p1",
+          "roundStart": false
+        },
+        {
+          "id": "p2",
+          "roundStart": false
+        },
+        {
+          "id": "p1",
+          "roundStart": true
+        },
+        {
+          "id": "p2",
+          "roundStart": false
+        },
+        {
+          "id": "p0",
+          "roundStart": false
+        }
+      ]
+    },
+    "turns_n7_seed_123456789": {
+      "roster": [
+        "p0",
+        "p1",
+        "p2",
+        "p3",
+        "p4",
+        "p5",
+        "p6"
+      ],
+      "seed": 123456789,
+      "count": 28,
+      "turns": [
+        {
+          "id": "p2",
+          "roundStart": true
+        },
+        {
+          "id": "p6",
+          "roundStart": false
+        },
+        {
+          "id": "p4",
+          "roundStart": false
+        },
+        {
+          "id": "p0",
+          "roundStart": false
+        },
+        {
+          "id": "p3",
+          "roundStart": false
+        },
+        {
+          "id": "p5",
+          "roundStart": false
+        },
+        {
+          "id": "p1",
+          "roundStart": false
+        },
+        {
+          "id": "p2",
+          "roundStart": true
+        },
+        {
+          "id": "p3",
+          "roundStart": false
+        },
+        {
+          "id": "p6",
+          "roundStart": false
+        },
+        {
+          "id": "p4",
+          "roundStart": false
+        },
+        {
+          "id": "p0",
+          "roundStart": false
+        },
+        {
+          "id": "p1",
+          "roundStart": false
+        },
+        {
+          "id": "p5",
+          "roundStart": false
+        },
+        {
+          "id": "p4",
+          "roundStart": true
+        },
+        {
+          "id": "p0",
+          "roundStart": false
+        },
+        {
+          "id": "p5",
+          "roundStart": false
+        },
+        {
+          "id": "p6",
+          "roundStart": false
+        },
+        {
+          "id": "p2",
+          "roundStart": false
+        },
+        {
+          "id": "p1",
+          "roundStart": false
+        },
+        {
+          "id": "p3",
+          "roundStart": false
+        },
+        {
+          "id": "p4",
+          "roundStart": true
+        },
+        {
+          "id": "p2",
+          "roundStart": false
+        },
+        {
+          "id": "p1",
+          "roundStart": false
+        },
+        {
+          "id": "p0",
+          "roundStart": false
+        },
+        {
+          "id": "p6",
+          "roundStart": false
+        },
+        {
+          "id": "p5",
+          "roundStart": false
+        },
+        {
+          "id": "p3",
+          "roundStart": false
+        }
+      ]
+    },
+    "turns_n12_seed_4242": {
+      "roster": [
+        "p0",
+        "p1",
+        "p2",
+        "p3",
+        "p4",
+        "p5",
+        "p6",
+        "p7",
+        "p8",
+        "p9",
+        "p10",
+        "p11"
+      ],
+      "seed": 4242,
+      "count": 36,
+      "turns": [
+        {
+          "id": "p0",
+          "roundStart": true
+        },
+        {
+          "id": "p8",
+          "roundStart": false
+        },
+        {
+          "id": "p10",
+          "roundStart": false
+        },
+        {
+          "id": "p7",
+          "roundStart": false
+        },
+        {
+          "id": "p11",
+          "roundStart": false
+        },
+        {
+          "id": "p1",
+          "roundStart": false
+        },
+        {
+          "id": "p2",
+          "roundStart": false
+        },
+        {
+          "id": "p5",
+          "roundStart": false
+        },
+        {
+          "id": "p4",
+          "roundStart": false
+        },
+        {
+          "id": "p9",
+          "roundStart": false
+        },
+        {
+          "id": "p3",
+          "roundStart": false
+        },
+        {
+          "id": "p6",
+          "roundStart": false
+        },
+        {
+          "id": "p5",
+          "roundStart": true
+        },
+        {
+          "id": "p2",
+          "roundStart": false
+        },
+        {
+          "id": "p4",
+          "roundStart": false
+        },
+        {
+          "id": "p0",
+          "roundStart": false
+        },
+        {
+          "id": "p8",
+          "roundStart": false
+        },
+        {
+          "id": "p1",
+          "roundStart": false
+        },
+        {
+          "id": "p7",
+          "roundStart": false
+        },
+        {
+          "id": "p10",
+          "roundStart": false
+        },
+        {
+          "id": "p3",
+          "roundStart": false
+        },
+        {
+          "id": "p11",
+          "roundStart": false
+        },
+        {
+          "id": "p6",
+          "roundStart": false
+        },
+        {
+          "id": "p9",
+          "roundStart": false
+        },
+        {
+          "id": "p4",
+          "roundStart": true
+        },
+        {
+          "id": "p0",
+          "roundStart": false
+        },
+        {
+          "id": "p8",
+          "roundStart": false
+        },
+        {
+          "id": "p5",
+          "roundStart": false
+        },
+        {
+          "id": "p10",
+          "roundStart": false
+        },
+        {
+          "id": "p6",
+          "roundStart": false
+        },
+        {
+          "id": "p7",
+          "roundStart": false
+        },
+        {
+          "id": "p3",
+          "roundStart": false
+        },
+        {
+          "id": "p9",
+          "roundStart": false
+        },
+        {
+          "id": "p11",
+          "roundStart": false
+        },
+        {
+          "id": "p2",
+          "roundStart": false
+        },
+        {
+          "id": "p1",
+          "roundStart": false
+        }
+      ]
+    },
+    "turns_membership_change": {
+      "seed": 99,
+      "steps": [
+        {
+          "setMembers": [
+            "p0",
+            "p1",
+            "p2",
+            "p3",
+            "p4"
+          ]
+        },
+        {
+          "take": 3
+        },
+        {
+          "setMembers": [
+            "p0",
+            "p1",
+            "p2",
+            "p3",
+            "p5"
+          ],
+          "note": "p4 removed after it was dealt"
+        },
+        {
+          "take": 10
+        }
+      ],
+      "turns": [
+        {
+          "id": "p0",
+          "roundStart": true
+        },
+        {
+          "id": "p2",
+          "roundStart": false
+        },
+        {
+          "id": "p4",
+          "roundStart": false
+        },
+        {
+          "id": "p3",
+          "roundStart": false
+        },
+        {
+          "id": "p1",
+          "roundStart": false
+        },
+        {
+          "id": "p2",
+          "roundStart": true
+        },
+        {
+          "id": "p5",
+          "roundStart": false
+        },
+        {
+          "id": "p3",
+          "roundStart": false
+        },
+        {
+          "id": "p0",
+          "roundStart": false
+        },
+        {
+          "id": "p1",
+          "roundStart": false
+        },
+        {
+          "id": "p3",
+          "roundStart": true
+        },
+        {
+          "id": "p0",
+          "roundStart": false
+        },
+        {
+          "id": "p5",
+          "roundStart": false
+        }
+      ]
+    },
+    "lot_n10_admit0_beacon": {
+      "roster": [
+        "p0",
+        "p1",
+        "p2",
+        "p3",
+        "p4",
+        "p5",
+        "p6",
+        "p7",
+        "p8",
+        "p9"
+      ],
+      "seed": 2989141319,
+      "admit": 0,
+      "admitted": []
+    },
+    "lot_n10_admit3_beacon": {
+      "roster": [
+        "p0",
+        "p1",
+        "p2",
+        "p3",
+        "p4",
+        "p5",
+        "p6",
+        "p7",
+        "p8",
+        "p9"
+      ],
+      "seed": 2989141319,
+      "admit": 3,
+      "admitted": [
+        "p8",
+        "p4",
+        "p2"
+      ]
+    },
+    "lot_n10_admit12_beacon": {
+      "roster": [
+        "p0",
+        "p1",
+        "p2",
+        "p3",
+        "p4",
+        "p5",
+        "p6",
+        "p7",
+        "p8",
+        "p9"
+      ],
+      "seed": 2989141319,
+      "admit": 12,
+      "admitted": [
+        "p8",
+        "p4",
+        "p2",
+        "p7",
+        "p3",
+        "p1",
+        "p6",
+        "p5",
+        "p0",
+        "p9"
+      ]
+    },
+    "beacon_seed": {
+      "network": "drand quicknet (League of Entropy)",
+      "chain": "52db9ba70e0cc0f6eaf7803dd07447a1f5477735fd3f661792ba94600c84e971",
+      "round": 1000000,
+      "randomness": "b22aad4794f7451896f7a371aa46106fd84d919f3f569acd5b2fddf1d1440af3",
+      "signature": "83ad29e4c409f9470fc2ef02f90214df49e02b441a1a241a82d622d9f608ef98fd8b11a029f1bee9d9e83b45088abe72",
+      "seed": 2989141319
+    },
+    "roster_commitment": {
+      "roster": [
+        "p0",
+        "p1",
+        "p2",
+        "p3",
+        "p4"
+      ],
+      "salt": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+      "commitment": "62c0be76806ba83f5e7562215a0657aa874bbcd4ff98d9bf0223452cfe1984ad"
+    },
+    "seed_commitment": {
+      "seed": 2989141319,
+      "salt": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+      "commitment": "3594b19bd817a00789af83b1cd4bbcbaad0b846bc22389d849e864c3637a1fff"
+    }
+  }
+}

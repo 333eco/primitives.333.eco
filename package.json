@@ -1,0 +1,66 @@
+{
+    "name": "@333eco/primitives",
+    "version": "1.0.0",
+    "description": "Recomputable primitives from 333.eco. First module: B-Call℠, the called draw — whose turn it is, or who is admitted, as a pure function of a committed roster and a seed no party controls. CC0, zero runtime dependencies, bit-identical conformance vectors.",
+    "license": "CC0-1.0",
+    "author": "Thon Ly",
+    "homepage": "https://github.com/333eco/primitives.333.eco#readme",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/333eco/primitives.333.eco.git"
+    },
+    "bugs": {
+        "url": "https://github.com/333eco/primitives.333.eco/issues"
+    },
+    "keywords": [
+        "b-call",
+        "called-draw",
+        "fair-rotation",
+        "lottery",
+        "sortition",
+        "verifiable-randomness",
+        "drand",
+        "commit-reveal",
+        "conformance-vectors",
+        "mulberry32",
+        "fisher-yates",
+        "cc0",
+        "public-domain"
+    ],
+    "type": "module",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "default": "./dist/index.js"
+        },
+        "./b-call": {
+            "types": "./dist/b-call.d.ts",
+            "default": "./dist/b-call.js"
+        },
+        "./b-call/vectors.json": "./vectors/b-call-vectors.json",
+        "./b-call/SPEC.md": "./SPEC.md",
+        "./package.json": "./package.json"
+    },
+    "files": [
+        "dist",
+        "vectors",
+        "SPEC.md"
+    ],
+    "sideEffects": false,
+    "engines": {
+        "node": ">=20"
+    },
+    "scripts": {
+        "build": "rm -rf dist && tsc -p tsconfig.json",
+        "vectors": "npm run build && node scripts/generate-vectors.mjs",
+        "test": "npm run build && node --test test/b-call.test.mjs",
+        "prepublishOnly": "npm test"
+    },
+    "devDependencies": {
+        "@333eco/sey": "1.0.0",
+        "typescript": "6.0.3"
+    },
+    "publishConfig": {
+        "access": "public"
+    }
+}
