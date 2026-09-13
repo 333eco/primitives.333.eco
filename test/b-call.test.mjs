@@ -229,6 +229,15 @@ test("beacon and commitment inputs are validated", async () => {
     assert.notEqual(await rosterCommitment(["p0", "p1", "p2"], salt), await rosterCommitment(["p1", "p0", "p2"], salt));
 });
 
+test("the second stream is a LAGGED COPY, not an independent stream — pinned so nobody re-claims independence", () => {
+    const seed = 0x083641a0;
+    const a = seededRng(seed);
+    const b = seededRng(secondStreamSeed(seed));
+    const A = Array.from({ length: 1000 }, () => a());
+    const B = Array.from({ length: 8200 }, () => b());
+    for (let k = 0; k < 1000; k++) assert.equal(B[k + 7179], A[k], `k=${k}`);
+});
+
 test("the package ships no seed maker", async () => {
     const mod = await import("../dist/b-call.js");
     assert.equal(mod.newSeed, undefined, "a seed the operator picks is a choice — it must come from outside");

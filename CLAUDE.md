@@ -17,6 +17,11 @@ do: it serves every body and names none.
   (devDependency, EXACT pin) before its own vectors. A change is a new versioned
   form with a new commitment prefix, never an edit.
 - ⛔ **Never add `newSeed()`.** The missing seed maker is a property, tested.
+- ⚠️ **v1 is scoped** (SPEC §10): play order and PUBLIC draws over a fixed roster
+  with a beacon seed. NOT the sealed regime, NOT a live roster. mulberry32 has a
+  measured 0.086% position gradient, a seed recoverable from ~7 turns, and a
+  "second stream" that is a lagged copy (min 7,179 draws). A fix is v2 — a new
+  seed version — and waits on the founder's ruling (roadmap A128(c)).
 - ⚠️ **Regenerate vectors after any src change** (`npm run vectors`); CI fails
   on a stale vector file.
 - ⚠️ **Break it on purpose before trusting a green suite.** The known-failure

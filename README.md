@@ -12,6 +12,12 @@ npm install @333eco/primitives
 
 `@333eco/primitives/b-call`
 
+> ⚠️ **v1 is the sey-compatible form, bound byte-for-byte to a contract already in
+> use, so it never changes.** It is sound for play order and for public draws over
+> a fixed roster with a beacon seed. It is **not** sufficient for a sealed draw or
+> for a recurring benefit whose roster changes mid-season — see
+> [`SPEC.md`](./SPEC.md) §9–§10 before using it for either.
+
 A **called draw** decides whose turn it is, or who gets in when a thing is
 oversubscribed, **without anyone choosing**. The result is a pure function of a
 roster committed before the seed exists and a seed nobody controls, so a

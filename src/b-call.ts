@@ -27,9 +27,16 @@
 //      seeds until the order suits, and the recomputation still checks out. The
 //      seed has to come from outside — a public beacon round named when the
 //      roster is committed (seedFromBeacon), or a salted commit–reveal
-//      (seedCommitment). A surface whose only stake is play order, and which
-//      must work offline, may seed locally — that is its decision, made in its
-//      own code, not a convenience offered here.
+//      (seedCommitment) held by someone who controls neither the roster nor its
+//      timing. A surface whose only stake is play order, and which must work
+//      offline, may seed locally — that is its decision, made in its own code,
+//      not a convenience offered here.
+//
+// ⚠️ SCOPE OF v1 (SPEC.md §10). This is the sey-compatible form and can never
+// change. It is sound for play order and for PUBLIC draws over a fixed roster
+// with a beacon seed. It is NOT sufficient for the sealed regime (no secret can
+// be combined with a beacon here) or for a recurring benefit with a live roster
+// (membership changes steer the next shuffle). A v2 is a new seed version.
 
 export type Rng = () => number;
 
@@ -57,13 +64,15 @@ export function shuffled<T>(items: readonly T[], rng: Rng): T[] {
     return out;
 }
 
-/** The golden-ratio constant that derives a second, independent stream from one seed. */
+/** The golden-ratio constant sey XORs into a seed for its second stream — a lagged copy, not an independent one (see below). */
 export const STREAM_SALT = 0x9e3779b9;
 
 /**
- * The seed of the second stream. Two draws that must neither collide nor drift
- * (sey's receivers and its relay callers) take `seed` and `secondStreamSeed(seed)`.
- * The XOR is on unsigned 32 bits.
+ * The seed of sey's second stream (its relay callers beside its receivers). The
+ * XOR is on unsigned 32 bits. ⚠️ NOT an independent stream: mulberry32's state is
+ * a Weyl sequence, so this is the first stream shifted by a seed-dependent number
+ * of draws, at least 7,179 for every seed. Fine for a circle; never for two long
+ * sequences that must be uncorrelated.
  */
 export function secondStreamSeed(seed: number): number {
     return (seed ^ STREAM_SALT) >>> 0;

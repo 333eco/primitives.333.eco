@@ -33,7 +33,7 @@ against that package's vectors before its own.
 | **Determined.** Output = f(roster, seed), recomputable by a stranger. | An operator's discretion, however well described. |
 | **No weights.** Nothing enters but the roster and the seed. | Scores, ranks, histories, preferences, bids-as-priority. A surface that needs one is not turn-shaped. |
 | **Commit before the seed.** The roster is fixed while the seed is still unknowable. | Trying seeds until the order suits. |
-| **External seed.** A beacon round named at commit, or a salted commit–reveal. | A seed the operator picks after seeing the roster. |
+| **External seed.** A beacon round named at commit — or a salted commit–reveal whose holder controls neither the roster nor its timing. | A seed the operator picks after seeing the roster, or holds while the roster is still open. |
 | **The regime is a property of the surface** (§7). | Publishing an order that would identify someone who must stay anonymous — or sealing one that the participant is entitled to know. |
 
 Two things this contract does **not** decide, and a surface must decide them
@@ -92,8 +92,14 @@ class SeededRng(seed: Int) {
 Swift: `&+` and `&*` wrap; plain `+` and `*` trap. Kotlin: use `ushr`, never
 `shr`, and keep the `and 0xFFFFFFFFL` or every negative draw flips sign.
 
-**Second stream.** Where one draw needs two independent sequences that must
-neither collide nor drift, the second is seeded with `uint32(seed XOR 0x9E3779B9)`.
+**Second stream.** Where one draw needs a second sequence (sey's relay callers
+beside its receivers), the second is seeded with `uint32(seed XOR 0x9E3779B9)`.
+⚠️ **It is not independent.** mulberry32's state is a Weyl sequence, so every seed
+is the same cycle at a different offset: the second stream is the first **shifted
+by a seed-dependent number of draws — at least 7,179 for every seed** (for seed
+`0x083641A0`, `stream2[k + 7179] == stream1[k]`). Harmless for a sey circle; do
+not rely on it wherever two streams of more than a few thousand draws must be
+uncorrelated.
 
 ## 2. The shuffle — Fisher–Yates, descending
 
@@ -147,7 +153,11 @@ swap — and it has a price, stated in §9: the member who closes a round never
 opens the next, and **closes it again with probability 2/n**, twice the uniform
 rate. `setMembers` **preserves surviving queue order** and refills only when the
 queue empties; a new member waits for the next round, and a removed one is never
-dealt again.
+dealt again. ⚠️ **Live membership is a steering channel wherever a turn is worth
+something** (§9): removing and re-adding a member cancels their pending turn, and
+whoever is present at a refill decides the next shuffle — which, with the seed
+known, can be simulated in advance. It is the right behaviour for a playground
+circle and the wrong one for a benefit.
 
 A turn surface needs at least **three** members for the order to be
 unpredictable — a bag of two deals a strict alternation.
@@ -191,6 +201,10 @@ vectors record quicknet round 1,000,000 (chain
 `salt` after. The salt is mandatory: a 32-bit seed behind a bare hash is
 recovered by brute force in seconds. A withheld reveal is not prevented — it is
 **visible**, and a surface using (b) must say in advance what happens then.
+⛔ **(b) is NOT operator-independent when the seed holder also controls the
+roster or its timing:** the holder knows the seed while the roster is still open
+and can shape the roster to it. Use (b) only where the seed holder controls
+neither, or for play-only surfaces as in (c).
 
 **(c) A local seed**, only where the draw's sole stake is play order and the
 surface must work offline. The reference deliberately ships **no seed maker**: a
@@ -222,9 +236,13 @@ anything anonymous bind?**
 | Order | visible, recomputable by anyone | committed in-season; recomputed at the reset by a named verifying quorum |
 | Counts | public | public — "everyone exactly once per round" is checkable from the roster size alone |
 
-In the sealed regime the salt on the roster commitment is what keeps a member
-who knows their own identifier from locating their position once a beacon seed
-is public.
+⛔ **v1 cannot yet deliver the sealed regime operator-independently.** A bare
+beacon seed is public, so a sealed order needs a secret in the seed; v1 offers
+no way to combine one with a beacon, which leaves only (b) — and (b) fails where
+the operator admits the roster. The construction a sealed regime needs is in
+§10. Also: publish counts **only at round boundaries** — a count that ticks per
+turn in-season names each recipient, while a bag's counts at a boundary are all
+equal and say nothing.
 
 ## 8. Conformance and versioning
 
@@ -251,14 +269,21 @@ of an old one.
 
 ## 9. Honest limits
 
-- **32 bits of state.** Only 2³² of a large roster's n! orderings are reachable.
-  Measured, not assumed: over 260,000 seeds no member's position distribution
-  departed from uniform beyond sampling noise (worst χ² 29.0 at 12 degrees of
-  freedom for 13 members; 33.8 at 19 for 20), while a deliberately biased
-  shuffle scored 349,558 on the same check. But the order is **predictable once
-  the seed is known**, and a short run of observed turns plus an exhaustive
-  search over 2³² seeds can recover it. That is intended for recomputation, and it is why the sealed regime
-  keeps the roster private rather than the seed.
+- **32 bits of state, and a small but real position bias.** Only 2³² of a large
+  roster's n! orderings are reachable, and mulberry32 emits only about 44% of
+  32-bit values over its full cycle. ⛔ *An earlier revision of this section said
+  no bias was detectable; that check (260,000 seeds) was too weak to see it.*
+  **Exhaustive over all 2³² seeds at 13 members, the first-listed member is dealt
+  first 0.086% less often and last 0.085% more often** — a monotone gradient near
+  16 binomial standard deviations, absent from a SplitMix64 control run through
+  the same harness (max 0.015%). Small, systematic, and tied to roster order,
+  which is a reason the roster order must be fixed before the seed is known.
+- **The seed is recoverable from a few observed turns.** Anyone holding the
+  ordered roster who sees about 7 turns of a 30-member draw (about 5 of a
+  100-member one) can enumerate all 2³² seeds and find the one that fits — about
+  30 seconds on an 8-core machine. The salt in `seedCommitment` hides the seed from
+  the commitment, never from its outputs. The same attack broke a 32-bit online
+  poker shuffle in 1999.
 - **The boundary rotation is not uniform across rounds.** Within a round every
   order is possible and counts are exactly equal, but the previous round's
   closer lands: never first; last with probability **2/n**; each middle position
@@ -273,7 +298,47 @@ of an old one.
 - **The roster is outside the draw.** A called draw removes discretion over the
   order and moves any remaining discretion to admission. Guard admission
   separately — one entry per verified person, for example.
-- **The beacon is trusted to its threshold.** drand's guarantee holds unless a
-  threshold of its League of Entropy members collude.
+- **A season with membership changes cannot be recomputed from roster + seed.**
+  `turns()` takes a fixed roster; a live roster needs the ordered log of changes,
+  written after the seed was known (§3).
+- **`rosterCommitment` does not bind the beacon round, the beacon network or the
+  algorithm version** — only a v1 tag, the salt and the roster. The binding is by
+  convention; publish the round beside the commitment, before the round is emitted.
+- **A draw can be voided and redrawn.** A genuine error and a pretext leave the
+  same record. Publish a voided draw beside its replacement and name the redraw
+  round in the original commitment.
+- **The beacon is trusted to its threshold.** A colluding threshold of drand's
+  League of Entropy could predict rounds (not bias them) — and an insider who
+  learns a seed while the roster is open is back in §3's steering problem.
 - **Classification is a judgment.** Deciding that a decision is turn-shaped at
-  all happens before any draw, and this contract cannot check it.
+  all, who is eligible, and where a lot's tier boundary lies all happen before
+  any draw, and this contract cannot check them. Publish them before entries open.
+- **A lot whose entry carries a price may be a lottery in law** — consideration,
+  chance and a prize. Take advice before charging for an entry into a lot.
+
+## 10. What v1 is, and what a v2 must add
+
+**v1 is the sey-compatible form.** Its generator, shuffle and bag are bound
+byte-for-byte to a contract already published and in use, so it can never change.
+It is sound for **play-order** draws and for **public** draws with a fixed roster
+and a beacon seed. It is **not sufficient** for the sealed regime or for a
+recurring benefit with a live roster. A v2 — a new seed version and a new
+commitment prefix, never an edit of v1 — would need, at least:
+
+1. **A draw derived from the full beacon output**, not its first four bytes:
+   HMAC-SHA-256 in counter mode (as in RFC 3797's successor work) or a
+   swap-or-not shuffle, with rejection sampling for indices and domain-separated
+   streams. This removes the bias, the seed recovery and the lagged stream at once.
+2. **A roster frozen per round**, each round's seed from a beacon round named at
+   that round's cutoff; absence recorded as a skip, never as removal from the
+   shuffle input; the change log committed.
+3. **One commitment binding** beacon network, round number, algorithm version and
+   roster, timestamped before the round is emitted.
+4. **For the sealed regime:** `seed = H(domain ‖ beacon round ‖ salt)` with
+   `H(salt)` committed before the roster closes — the operator knows the salt,
+   never the seed, while the roster is open — and the salt time-locked to the
+   reset round so the reveal cannot be withheld.
+5. **A boundary rule that keeps positions uniform** — e.g. swapping a colliding
+   opener with a uniformly drawn later position instead of rotating it to the end.
+
+None of this is specified or built yet.
