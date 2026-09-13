@@ -142,7 +142,7 @@ const ROUNDS = {
 const Q = v2.QUICKNET.hash;
 // Deterministic, obviously non-secret salts for reproducibility. Never use these.
 const { createHash } = await import("node:crypto");
-const vsalt = (label) => createHash("sha256").update(`called-draw/v2/vector-salt/${label}`).digest("hex");
+const vsalt = (label) => createHash("sha256").update(`b-called/v2/vector-salt/${label}`).digest("hex");
 const pk = (n, from = 0) => Array.from({ length: n }, (_, i) => `p${i + from}`);
 
 const out2 = {

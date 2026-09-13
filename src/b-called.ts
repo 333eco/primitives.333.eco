@@ -190,7 +190,7 @@ export function seedFromBeacon(randomnessHex: string): number {
  */
 export function rosterCommitment(roster: readonly string[], salt: string): Promise<string> {
     assertSalt(salt);
-    return sha256Hex(`called-draw/v1/roster\n${salt.toLowerCase()}\n${JSON.stringify(roster)}`);
+    return sha256Hex(`b-called/v1/roster\n${salt.toLowerCase()}\n${JSON.stringify(roster)}`);
 }
 
 /**
@@ -201,7 +201,7 @@ export function rosterCommitment(roster: readonly string[], salt: string): Promi
  */
 export function seedCommitment(seed: number, salt: string): Promise<string> {
     assertSalt(salt);
-    return sha256Hex(`called-draw/v1/seed\n${salt.toLowerCase()}\n${seed >>> 0}`);
+    return sha256Hex(`b-called/v1/seed\n${salt.toLowerCase()}\n${seed >>> 0}`);
 }
 
 /** 32 random bytes as hex, from the platform's cryptographic generator. */

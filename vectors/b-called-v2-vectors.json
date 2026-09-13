@@ -38,7 +38,7 @@
             "drawId": "vector-season/round-1",
             "form": "turn",
             "regime": "public",
-            "salt": "1e7ed6f25711168915c444106ec982ef155596dc2f497946d696d8f7b083f554",
+            "salt": "84b3806b93ebebed48335c296f9943aa8b28de46547410ff1ae75c6fdb5201c0",
             "roster": [
               "p0",
               "p1",
@@ -50,13 +50,13 @@
             "previousLast": null
           },
           "randomness": "b22aad4794f7451896f7a371aa46106fd84d919f3f569acd5b2fddf1d1440af3",
-          "commitment": "f5dd0daf55ef7c5ebad5bbbd2e4d97f86b908d668a72bb2122efb355191590a3",
+          "commitment": "2098f5bcf1b18d54f34da93fe48a9988958deaca4611c555dc3105b2dfa58244",
           "order": [
-            "p5",
-            "p4",
             "p2",
-            "p1",
+            "p4",
             "p3",
+            "p1",
+            "p5",
             "p0"
           ],
           "boundarySwapped": false
@@ -68,7 +68,7 @@
             "drawId": "vector-season/round-2",
             "form": "turn",
             "regime": "public",
-            "salt": "474244baf6693186ff116b91c820f0ac240f3045219fd90678ddfbaeb9079904",
+            "salt": "5e2b141f755dc18771086ca27498132587b240dbc9d5311f64f9af031eab33f0",
             "roster": [
               "p0",
               "p1",
@@ -80,16 +80,16 @@
             "previousLast": "p0"
           },
           "randomness": "9f45f439afd81e9846b3b4dc5e3e6051922c73c8459d18e9d507b52ddbd884ff",
-          "commitment": "8ec03c91406e48e42c7e0fefa0948a4ec2df72e0b894415094537deca946762e",
+          "commitment": "89d831b72ed8f6f940fa53f6efdf1711bf784449e5a7187e37f6e1d61765a152",
           "order": [
-            "p5",
-            "p6",
-            "p0",
             "p1",
+            "p6",
             "p4",
-            "p3"
+            "p3",
+            "p5",
+            "p0"
           ],
-          "boundarySwapped": false
+          "boundarySwapped": true
         },
         {
           "input": {
@@ -98,7 +98,7 @@
             "drawId": "vector-season/round-3",
             "form": "turn",
             "regime": "public",
-            "salt": "7778d7c2cc2b1be1fe803ecb912a1c69813327d20a23462d44c760aa3a0fd550",
+            "salt": "0f6dceda44448abf16d3abed84ab3c0af52073a5ea1dd242f3b95977cbe512d7",
             "roster": [
               "p0",
               "p1",
@@ -107,17 +107,17 @@
               "p5",
               "p6"
             ],
-            "previousLast": "p3"
+            "previousLast": "p0"
           },
           "randomness": "018e0e0c9e0d7906762eca633fab3ec5e97ee4cb8949e4eb9ee589160b49263d",
-          "commitment": "5db30040de12cc4e6bf7e6857884b8b43d4b194ee757a1d24520990f3a52ecab",
+          "commitment": "fd1ee3270592eeb8377277ee488166517a9f66dbdb7b45a6c080dbf06e510305",
           "order": [
-            "p1",
+            "p6",
+            "p0",
             "p3",
             "p4",
-            "p6",
             "p5",
-            "p0"
+            "p1"
           ],
           "boundarySwapped": false
         },
@@ -128,7 +128,7 @@
             "drawId": "vector-season/round-4",
             "form": "turn",
             "regime": "public",
-            "salt": "9e50b9a8681c94ed89534db1635f6f113926dfa5b406af0dfc37ce3cc83192a6",
+            "salt": "7fa083a8bd3437827711fa66dec6e4f3cf68e66f549c426bc9eccc3ea16cce39",
             "roster": [
               "p0",
               "p1",
@@ -138,18 +138,18 @@
               "p5",
               "p6"
             ],
-            "previousLast": "p0"
+            "previousLast": "p1"
           },
           "randomness": "4988431355480858aede82fe7af925d486ecf10253e175d4fa28c2e6512d14ea",
-          "commitment": "8eb705dbf3b6910db1982760e90f261f72bb8393ff39f22ceb2838c59c00b25a",
+          "commitment": "4d56c4377236ba648c66f303dac0f8a6d90ac004dc4346e61b42ee9776c2eccc",
           "order": [
+            "p2",
             "p3",
             "p4",
-            "p6",
-            "p2",
             "p1",
+            "p0",
             "p5",
-            "p0"
+            "p6"
           ],
           "boundarySwapped": false
         }
@@ -163,7 +163,7 @@
         "drawId": "vector-boundary",
         "form": "turn",
         "regime": "public",
-        "salt": "d4d136ef018a4eead06acfbc0c8c7bec44779c8e3087491fec7f4570828ede3c",
+        "salt": "36e858925db2e7abfbf56c2d5301db6b76e91e9bb37a53816cd3fda7762b162b",
         "roster": [
           "p0",
           "p1",
@@ -173,7 +173,7 @@
         "previousLast": "p3"
       },
       "randomness": "9f45f439afd81e9846b3b4dc5e3e6051922c73c8459d18e9d507b52ddbd884ff",
-      "commitment": "03c94e4e6f11d0eda1aa1a368fb77ffe1a09c9579eb10e46f49cd4c80899b304",
+      "commitment": "3147efa5f2d46ea89190c99989e78ed59c17d5f0a20e8344515d52fc205703a7",
       "order": [
         "p0",
         "p2",
@@ -190,7 +190,7 @@
         "drawId": "vector-sealed",
         "form": "turn",
         "regime": "sealed",
-        "salt": "71614679106be8e8fde458840bac75d22e1f4617611c0d6ab9b3466a667dc437",
+        "salt": "630cb327aa11b416e5ff0649c88774aabc356e2da7cf955bf5926ea0b1ce5e91",
         "roster": [
           "p0",
           "p1",
@@ -205,17 +205,17 @@
         "previousLast": null
       },
       "randomness": "4988431355480858aede82fe7af925d486ecf10253e175d4fa28c2e6512d14ea",
-      "commitment": "bb7017d32953f54e9a3d7d595728cafa98349df431a6305f063330993df77e8a",
+      "commitment": "d18ff2052ab81dca9425a205600a138bb7972d48aee586c2b298065f77953f2e",
       "order": [
-        "p6",
         "p3",
-        "p0",
-        "p8",
         "p4",
         "p5",
-        "p1",
+        "p8",
         "p7",
-        "p2"
+        "p6",
+        "p2",
+        "p1",
+        "p0"
       ],
       "boundarySwapped": false
     },
@@ -226,7 +226,7 @@
         "drawId": "vector-lot-admit-0",
         "form": "lot",
         "regime": "public",
-        "salt": "40e000795798eb0c0810a4b9dfc6b212fbae9fb458ddbcc9d000778bcc6f9630",
+        "salt": "1ff70699714cdcb9f25d6c611ac5eebf01e0de91499649f22c2f4f335d20b068",
         "roster": [
           "p0",
           "p1",
@@ -242,18 +242,18 @@
         "admit": 0
       },
       "randomness": "018e0e0c9e0d7906762eca633fab3ec5e97ee4cb8949e4eb9ee589160b49263d",
-      "commitment": "d9320eaddaa4edaf0c3221752e130f8b64982e7a7b075deb2d3f8f790e6f89b4",
+      "commitment": "2328df5b163cbee9af1da479ef28c50927e4392a69bf71203d2bb8af16a3170e",
       "order": [
+        "p3",
+        "p8",
+        "p6",
+        "p5",
+        "p4",
         "p2",
         "p7",
-        "p8",
-        "p9",
         "p0",
-        "p5",
-        "p3",
-        "p4",
-        "p1",
-        "p6"
+        "p9",
+        "p1"
       ],
       "admitted": []
     },
@@ -264,7 +264,7 @@
         "drawId": "vector-lot-admit-3",
         "form": "lot",
         "regime": "public",
-        "salt": "1f3367057724d19978ac3668805f6a46c752ab5d1dec71e3c71f28ea3d5e0add",
+        "salt": "340640ffeb3af41a0af98fa5da17effc88017cb009580fe45f23fe4806d8f5fa",
         "roster": [
           "p0",
           "p1",
@@ -280,23 +280,23 @@
         "admit": 3
       },
       "randomness": "018e0e0c9e0d7906762eca633fab3ec5e97ee4cb8949e4eb9ee589160b49263d",
-      "commitment": "6fc634d20d975d8d4fdcbbd51689735abad82972807db7f0545403300b252b30",
+      "commitment": "caa5620c9b5ddc8bc787bc28a1e0ff8b42ecc73aff4997b0ab61ac311e3320c6",
       "order": [
-        "p6",
-        "p2",
-        "p9",
-        "p0",
+        "p1",
         "p5",
+        "p8",
+        "p3",
+        "p9",
         "p4",
         "p7",
-        "p1",
-        "p3",
-        "p8"
+        "p0",
+        "p2",
+        "p6"
       ],
       "admitted": [
-        "p6",
-        "p2",
-        "p9"
+        "p1",
+        "p5",
+        "p8"
       ]
     },
     "lot_admit_10": {
@@ -306,7 +306,7 @@
         "drawId": "vector-lot-admit-10",
         "form": "lot",
         "regime": "public",
-        "salt": "5c3dcc3f3db2428d6803eab47f072fa94fb7c2a4ce7f26e6f3b94fa33390d77e",
+        "salt": "787790c922afb51a3ea76ec944a52d3e9bb9c3af70764ea36ddf38198c5cb813",
         "roster": [
           "p0",
           "p1",
@@ -322,56 +322,56 @@
         "admit": 10
       },
       "randomness": "018e0e0c9e0d7906762eca633fab3ec5e97ee4cb8949e4eb9ee589160b49263d",
-      "commitment": "7770072defb2e7e0063c70c93296801ed1eae1de34a610270d1e24581202e315",
+      "commitment": "e61fa331594fb774aae6aab3415876b065002159ad77ce5c7c28c021b4954328",
       "order": [
-        "p6",
-        "p8",
-        "p0",
-        "p5",
         "p7",
-        "p1",
-        "p3",
+        "p5",
+        "p2",
+        "p8",
+        "p6",
         "p9",
+        "p1",
         "p4",
-        "p2"
+        "p0",
+        "p3"
       ],
       "admitted": [
-        "p6",
-        "p8",
-        "p0",
-        "p5",
         "p7",
-        "p1",
-        "p3",
+        "p5",
+        "p2",
+        "p8",
+        "p6",
         "p9",
+        "p1",
         "p4",
-        "p2"
+        "p0",
+        "p3"
       ]
     },
     "stream": {
-      "key": "4f8112e0ed65383e678d25f1858c8e806cfee9ad211688bb83b638e31ccf2621",
+      "key": "ab45295f63c85851c458c5e1bb874edd0d198684afff6c3c32b5d7ea1e105d1e",
       "label": "order",
       "uint32": [
-        3373046798,
-        4142278195,
-        3723213956,
-        1427582648,
-        2453001065,
-        3841147194,
-        3414954753,
-        1405770921,
-        2138745754,
-        1180476626,
-        1443070046,
-        2093306465,
-        4276993962,
-        297418141,
-        1580182555,
-        4235658927,
-        1693520556,
-        3085244584,
-        4092410714,
-        2419023292
+        3141711942,
+        2346056522,
+        1328379077,
+        181800601,
+        3242495924,
+        4084427283,
+        2743011458,
+        1946908072,
+        254038853,
+        1725894349,
+        4072445684,
+        495238928,
+        2521006618,
+        967603897,
+        1751810745,
+        981340562,
+        1170434546,
+        1076749136,
+        3057644809,
+        1169767933
       ]
     },
     "round_time": {

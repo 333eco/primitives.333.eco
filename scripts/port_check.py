@@ -42,7 +42,7 @@ def roster_list(ids):
 
 def commitment(inp, *, omit_round=False):
     form = inp["form"]
-    parts = [s("called-draw/v2/commitment"), s(inp["network"].lower())]
+    parts = [s("b-called/v2/commitment"), s(inp["network"].lower())]
     if not omit_round:
         parts.append(u64(inp["round"]))
     parts += [
@@ -58,7 +58,7 @@ def commitment(inp, *, omit_round=False):
 
 
 def stream(key, label, *, little_endian=False):
-    sk = hmac.new(key, s("called-draw/v2/stream") + s(label), hashlib.sha256).digest()
+    sk = hmac.new(key, s("b-called/v2/stream") + s(label), hashlib.sha256).digest()
     counter = 0
     while True:
         block = hmac.new(sk, u64(counter), hashlib.sha256).digest()
@@ -78,7 +78,7 @@ def uniform(it, m):
 def draw(inp, randomness, *, rotate_boundary=False, omit_round=False):
     c = commitment(inp, omit_round=omit_round)
     key = hashlib.sha256(
-        s("called-draw/v2/key") + field(bytes.fromhex(c)) + field(bytes.fromhex(randomness)) + field(bytes.fromhex(inp["salt"]))
+        s("b-called/v2/key") + field(bytes.fromhex(c)) + field(bytes.fromhex(randomness)) + field(bytes.fromhex(inp["salt"]))
     ).digest()
     it = stream(key, "order")
     order = list(inp["roster"])

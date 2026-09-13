@@ -219,8 +219,8 @@ SHA-256 over UTF-8, hex output, lowercase. The salt is at least 16 bytes of hex
 (the reference generates 32) and is lowercased before hashing.
 
 ```
-rosterCommitment(roster, salt) = SHA256( "called-draw/v1/roster\n" + salt + "\n" + JSON(roster) )
-seedCommitment(seed, salt)     = SHA256( "called-draw/v1/seed\n"   + salt + "\n" + decimal(uint32(seed)) )
+rosterCommitment(roster, salt) = SHA256( "b-called/v1/roster\n" + salt + "\n" + JSON(roster) )
+seedCommitment(seed, salt)     = SHA256( "b-called/v1/seed\n"   + salt + "\n" + decimal(uint32(seed)) )
 ```
 
 `JSON(roster)` is the ordered array of identifier strings with no whitespace,
@@ -351,7 +351,7 @@ list(ids)   u32(count) ‖ str(id₁) ‖ … ‖ str(idₙ)
 ## 12. The commitment
 
 ```
-C = SHA-256( str("called-draw/v2/commitment")
+C = SHA-256( str("b-called/v2/commitment")
            ‖ str(lowercase(network))       # beacon chain hash, hex
            ‖ u64(round)                    # the beacon round, named now, emitted later
            ‖ str(drawId)                   # unique per draw
@@ -375,8 +375,8 @@ A tier boundary set after the order is known is a choice; here it is fixed first
 ## 13. The key and the streams
 
 ```
-K  = SHA-256( str("called-draw/v2/key") ‖ bytes(C) ‖ bytes(randomness) ‖ bytes(salt) )
-Sₗ = HMAC-SHA-256( key = K,  msg = str("called-draw/v2/stream") ‖ str(label) )
+K  = SHA-256( str("b-called/v2/key") ‖ bytes(C) ‖ bytes(randomness) ‖ bytes(salt) )
+Sₗ = HMAC-SHA-256( key = K,  msg = str("b-called/v2/stream") ‖ str(label) )
 Bᵢ = HMAC-SHA-256( key = Sₗ, msg = u64(i) )          # i = 0, 1, 2, …
 ```
 

@@ -109,7 +109,7 @@ export async function draw(input: DrawInput, randomness: string): Promise<Draw> 
     validate(input);
     assertHex(randomness, 32, "beacon randomness");
     const commitment = hex(await sha256(encodeCommitment(input)));
-    const key = await sha256(concat(str("called-draw/v2/key"), field(fromHex(commitment)), field(fromHex(randomness)), field(fromHex(input.salt))));
+    const key = await sha256(concat(str("b-called/v2/key"), field(fromHex(commitment)), field(fromHex(randomness)), field(fromHex(input.salt))));
     const next = await stream(key, "order");
     const order = input.roster.slice();
     for (let i = order.length - 1; i > 0; i--) {
@@ -193,15 +193,16 @@ export async function uniformIndex(next: () => Promise<number>, m: number): Prom
 }
 
 // ── encoding ─────────────────────────────────────────────────────────────────
-// ⛔ The domain tags say `called-draw`, not the mark, and that is deliberate: a mark can be
-// re-seated after counsel (it already was once — B-Call became B-Called on 2026-09-13); a
-// protocol constant inside a published commitment can never change.
+// The domain tags carry the implementation's name (`b-called/v2/…`), for consistency with
+// the module paths. ⛔ They are PROTOCOL CONSTANTS, not uses of the mark: once published they
+// never change. If the mark is ever re-seated after counsel, these stay as a historical
+// identifier — the estate's repo-name precedent — and a change would be a new version.
 // Every field is length-prefixed (u32 big-endian, then bytes), so no two different
 // inputs share an encoding and a port needs no JSON or text-escaping rules.
 
 function encodeCommitment(i: DrawInput): Bytes {
     return concat(
-        str("called-draw/v2/commitment"),
+        str("b-called/v2/commitment"),
         str(i.network.toLowerCase()),
         u64(i.round),
         str(i.drawId),
@@ -215,7 +216,7 @@ function encodeCommitment(i: DrawInput): Bytes {
 }
 
 async function stream(key: Bytes, label: string): Promise<() => Promise<number>> {
-    const streamKey = await hmac(key, concat(str("called-draw/v2/stream"), str(label)));
+    const streamKey = await hmac(key, concat(str("b-called/v2/stream"), str(label)));
     let counter = 0;
     let block = new Uint8Array(0);
     let offset = 32;
