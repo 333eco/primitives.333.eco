@@ -5,10 +5,10 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import * as v2 from "../dist/b-call-v2.js";
-import { turns as v1turns } from "../dist/b-call.js";
+import * as v2 from "../dist/b-called-v2.js";
+import { turns as v1turns } from "../dist/b-called.js";
 
-const V = JSON.parse(readFileSync(new URL("../vectors/b-call-v2-vectors.json", import.meta.url), "utf8"));
+const V = JSON.parse(readFileSync(new URL("../vectors/b-called-v2-vectors.json", import.meta.url), "utf8"));
 const Q = v2.QUICKNET.hash;
 const R = V.rounds["1000001"].randomness;
 const pk = (n) => Array.from({ length: n }, (_, i) => `p${i}`);

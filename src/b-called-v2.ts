@@ -1,6 +1,6 @@
-// B-Call℠ v2 — the called draw for draws that are WORTH SOMETHING.
+// B-Called℠ v2 — the called draw for draws that are WORTH SOMETHING.
 //
-// v1 (./b-call.ts) is bound byte-for-byte to sey's published caller and can never
+// v1 (./b-called.ts) is bound byte-for-byte to sey's published caller and can never
 // change. It is sound for play order and for public draws over a fixed roster. A
 // prior-art census and counterexample hunt (2026-09-13) showed what it cannot do,
 // and every item below answers one of those findings. SPEC.md Part II is normative.
@@ -109,7 +109,7 @@ export async function draw(input: DrawInput, randomness: string): Promise<Draw> 
     validate(input);
     assertHex(randomness, 32, "beacon randomness");
     const commitment = hex(await sha256(encodeCommitment(input)));
-    const key = await sha256(concat(str("b-call/v2/key"), field(fromHex(commitment)), field(fromHex(randomness)), field(fromHex(input.salt))));
+    const key = await sha256(concat(str("called-draw/v2/key"), field(fromHex(commitment)), field(fromHex(randomness)), field(fromHex(input.salt))));
     const next = await stream(key, "order");
     const order = input.roster.slice();
     for (let i = order.length - 1; i > 0; i--) {
@@ -193,12 +193,15 @@ export async function uniformIndex(next: () => Promise<number>, m: number): Prom
 }
 
 // ── encoding ─────────────────────────────────────────────────────────────────
+// ⛔ The domain tags say `called-draw`, not the mark, and that is deliberate: a mark can be
+// re-seated after counsel (it already was once — B-Call became B-Called on 2026-09-13); a
+// protocol constant inside a published commitment can never change.
 // Every field is length-prefixed (u32 big-endian, then bytes), so no two different
 // inputs share an encoding and a port needs no JSON or text-escaping rules.
 
 function encodeCommitment(i: DrawInput): Bytes {
     return concat(
-        str("b-call/v2/commitment"),
+        str("called-draw/v2/commitment"),
         str(i.network.toLowerCase()),
         u64(i.round),
         str(i.drawId),
@@ -212,7 +215,7 @@ function encodeCommitment(i: DrawInput): Bytes {
 }
 
 async function stream(key: Bytes, label: string): Promise<() => Promise<number>> {
-    const streamKey = await hmac(key, concat(str("b-call/v2/stream"), str(label)));
+    const streamKey = await hmac(key, concat(str("called-draw/v2/stream"), str(label)));
     let counter = 0;
     let block = new Uint8Array(0);
     let offset = 32;

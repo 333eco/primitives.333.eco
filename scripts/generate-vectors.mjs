@@ -1,4 +1,4 @@
-// Regenerates vectors/b-call-vectors.json from the built reference (dist/).
+// Regenerates vectors/b-called-vectors.json from the built reference (dist/).
 // Run: npm run vectors
 //
 // The vectors are authoritative for every implementation, including this one.
@@ -17,7 +17,7 @@ import {
     seedFromBeacon,
     rosterCommitment,
     seedCommitment
-} from "../dist/b-call.js";
+} from "../dist/b-called.js";
 
 const ids = (n) => Array.from({ length: n }, (_, i) => `p${i}`);
 
@@ -42,7 +42,7 @@ const SALT = Array.from({ length: 32 }, (_, i) => i.toString(16).padStart(2, "0"
 const out = {
     license: "CC0-1.0",
     spec: "SPEC.md",
-    generatedFrom: "src/b-call.ts",
+    generatedFrom: "src/b-called.ts",
     note: "Authoritative. Regenerate with `npm run vectors`. prng and shuffle cases for seeds 1 and 123456789 are byte-identical to @333eco/sey@1.0.0 caller-vectors.json.",
     cases: {}
 };
@@ -126,13 +126,13 @@ out.cases.seed_commitment = {
     commitment: await seedCommitment(beaconSeed, SALT)
 };
 
-writeFileSync(new URL("../vectors/b-call-vectors.json", import.meta.url), JSON.stringify(out, null, 2) + "\n");
-console.log(`b-call-vectors.json — ${Object.keys(out.cases).length} cases`);
+writeFileSync(new URL("../vectors/b-called-vectors.json", import.meta.url), JSON.stringify(out, null, 2) + "\n");
+console.log(`b-called-vectors.json — ${Object.keys(out.cases).length} cases`);
 
 // ── v2 ───────────────────────────────────────────────────────────────────────
 // Real consecutive quicknet rounds, recorded. Each is checked against its
 // signature by the suite (consistency, not BLS authenticity).
-const v2 = await import("../dist/b-call-v2.js");
+const v2 = await import("../dist/b-called-v2.js");
 const ROUNDS = {
     1000000: { randomness: "b22aad4794f7451896f7a371aa46106fd84d919f3f569acd5b2fddf1d1440af3", signature: "83ad29e4c409f9470fc2ef02f90214df49e02b441a1a241a82d622d9f608ef98fd8b11a029f1bee9d9e83b45088abe72" },
     1000001: { randomness: "9f45f439afd81e9846b3b4dc5e3e6051922c73c8459d18e9d507b52ddbd884ff", signature: "a5bd91e5e2d8c0bf51bffdfad87eef34348fd9c0b2df2bee39db90bdef7e1399b1a77bb2fe98b24d84c0936a306c4218" },
@@ -142,13 +142,13 @@ const ROUNDS = {
 const Q = v2.QUICKNET.hash;
 // Deterministic, obviously non-secret salts for reproducibility. Never use these.
 const { createHash } = await import("node:crypto");
-const vsalt = (label) => createHash("sha256").update(`b-call/v2/vector-salt/${label}`).digest("hex");
+const vsalt = (label) => createHash("sha256").update(`called-draw/v2/vector-salt/${label}`).digest("hex");
 const pk = (n, from = 0) => Array.from({ length: n }, (_, i) => `p${i + from}`);
 
 const out2 = {
     license: "CC0-1.0",
     spec: "SPEC.md, Part II",
-    generatedFrom: "src/b-call-v2.ts",
+    generatedFrom: "src/b-called-v2.ts",
     note: "Authoritative. Regenerate with `npm run vectors`. scripts/port_check.py recomputes every case from the spec alone, in Python's standard library.",
     chain: v2.QUICKNET,
     rounds: ROUNDS,
@@ -197,5 +197,5 @@ for (const admit of [0, 3, 10]) {
 out2.cases.stream = { key: vsalt("stream-key"), label: "order", uint32: await v2.streamUint32(vsalt("stream-key"), "order", 20) };
 out2.cases.round_time = { chain: "quicknet", round: 1000000, unixSeconds: v2.roundTime(v2.QUICKNET, 1000000) };
 
-writeFileSync(new URL("../vectors/b-call-v2-vectors.json", import.meta.url), JSON.stringify(out2, null, 2) + "\n");
-console.log(`b-call-v2-vectors.json — ${Object.keys(out2.cases).length} cases`);
+writeFileSync(new URL("../vectors/b-called-v2-vectors.json", import.meta.url), JSON.stringify(out2, null, 2) + "\n");
+console.log(`b-called-v2-vectors.json — ${Object.keys(out2.cases).length} cases`);

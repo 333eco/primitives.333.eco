@@ -1,7 +1,7 @@
 {
   "license": "CC0-1.0",
   "spec": "SPEC.md",
-  "generatedFrom": "src/b-call.ts",
+  "generatedFrom": "src/b-called.ts",
   "note": "Authoritative. Regenerate with `npm run vectors`. prng and shuffle cases for seeds 1 and 123456789 are byte-identical to @333eco/sey@1.0.0 caller-vectors.json.",
   "cases": {
     "prng_seed_0": {
@@ -801,12 +801,12 @@
         "p4"
       ],
       "salt": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
-      "commitment": "62c0be76806ba83f5e7562215a0657aa874bbcd4ff98d9bf0223452cfe1984ad"
+      "commitment": "354e22df07ec2809bfedcd70559a83b48bd2fea279953dfb34299254d8e48512"
     },
     "seed_commitment": {
       "seed": 2989141319,
       "salt": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
-      "commitment": "3594b19bd817a00789af83b1cd4bbcbaad0b846bc22389d849e864c3637a1fff"
+      "commitment": "23ebf9b06c706033c2b1beb38c8dea3b1a33071d24715240e56452722c8e6db9"
     }
   }
 }

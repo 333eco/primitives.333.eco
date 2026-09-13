@@ -8,9 +8,9 @@ dependencies; CC0.
 npm install @333eco/primitives
 ```
 
-## B-Call℠ — the called draw
+## B-Called℠ — the called draw
 
-`@333eco/primitives/b-call`
+`@333eco/primitives/b-called`
 
 > ⚠️ **v1 is the sey-compatible form, bound byte-for-byte to a contract already in
 > use, so it never changes.** It is sound for play order and for public draws over
@@ -28,7 +28,7 @@ order nobody can predict. **Lots** admit a fixed number of members when there
 are more than fit.
 
 ```js
-import { turns, lot, seedFromBeacon, rosterCommitment, newSalt } from "@333eco/primitives/b-call";
+import { turns, lot, seedFromBeacon, rosterCommitment, newSalt } from "@333eco/primitives/b-called";
 
 const roster = ["amara", "bopha", "chen", "dara"];
 
@@ -65,7 +65,7 @@ belong to the surface using it. See `SPEC.md` §0 and §9.
 
 ### v2 — for draws worth something
 
-`@333eco/primitives/b-call/v2`
+`@333eco/primitives/b-called/v2`
 
 Use v2 for a benefit, an income, a sealed order, or a roster that changes between
 rounds. The draw comes from the whole beacon output. One commitment binds the round,
@@ -73,7 +73,7 @@ the roster, the previous round's closer and a lot's admit count. Each round has 
 frozen roster, and the boundary rule keeps positions uniform.
 
 ```js
-import { commit, draw, verify, roundAt, QUICKNET, newSalt } from "@333eco/primitives/b-call/v2";
+import { commit, draw, verify, roundAt, QUICKNET, newSalt } from "@333eco/primitives/b-called/v2";
 
 const input = {
     network: QUICKNET.hash,
@@ -106,7 +106,7 @@ reimplements the draw from the spec alone in Python's standard library and must
 reproduce every vector.
 
 ```js
-import vectors from "@333eco/primitives/b-call/vectors.json" with { type: "json" };
+import vectors from "@333eco/primitives/b-called/vectors.json" with { type: "json" };
 ```
 
 The generator, shuffle and turn form were lifted unchanged from sey's caller.
@@ -118,6 +118,6 @@ confirms the vectors catch each one.
 ## Licence and name
 
 The code, the specification and the vectors are **CC0 1.0** — see `LICENSE`.
-The mechanism is free to implement under any name. **B-Call℠** is a service mark
+The mechanism is free to implement under any name. **B-Called℠** is a service mark
 naming this reference implementation and its vectors; you may truthfully say an
-implementation of yours "passes the B-Call℠ vectors."
+implementation of yours "passes the B-Called℠ vectors."

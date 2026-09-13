@@ -39,7 +39,7 @@ jobs:
       - name: Vectors are current
         run: |
           node scripts/generate-vectors.mjs
-          git diff --exit-code vectors/ || { echo "::error::vectors/b-call-vectors.json is stale against src/ — run npm run vectors"; exit 1; }
+          git diff --exit-code vectors/ || { echo "::error::vectors/b-called-vectors.json is stale against src/ — run npm run vectors"; exit 1; }
 
   publish:
     needs: test

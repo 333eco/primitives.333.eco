@@ -24,11 +24,11 @@ import {
     rosterCommitment,
     seedCommitment,
     newSalt
-} from "../dist/b-call.js";
+} from "../dist/b-called.js";
 
 const require = createRequire(import.meta.url);
 const sey = JSON.parse(readFileSync(require.resolve("@333eco/sey/caller-vectors.json"), "utf8"));
-const own = JSON.parse(readFileSync(new URL("../vectors/b-call-vectors.json", import.meta.url), "utf8"));
+const own = JSON.parse(readFileSync(new URL("../vectors/b-called-vectors.json", import.meta.url), "utf8"));
 
 const u32 = (rng, n) => Array.from({ length: n }, () => rng() * 4294967296);
 const ids = (n) => Array.from({ length: n }, (_, i) => `p${i}`);
@@ -239,6 +239,6 @@ test("the second stream is a LAGGED COPY, not an independent stream — pinned s
 });
 
 test("the package ships no seed maker", async () => {
-    const mod = await import("../dist/b-call.js");
+    const mod = await import("../dist/b-called.js");
     assert.equal(mod.newSeed, undefined, "a seed the operator picks is a choice — it must come from outside");
 });

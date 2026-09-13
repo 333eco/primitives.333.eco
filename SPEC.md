@@ -2,9 +2,9 @@
 
 _This document and the conformance vectors beside it are CC0. Implement the
 mechanism under any name, in any language; no permission is needed and none can
-be withheld. **B-Call℠** names one implementation of it — the reference in
-`src/b-call.ts` — and those vectors. Anyone may truthfully say their own
-implementation "passes the B-Call℠ vectors."_
+be withheld. **B-Called℠** names one implementation of it — the reference in
+`src/b-called.ts` — and those vectors. Anyone may truthfully say their own
+implementation "passes the B-Called℠ vectors."_
 
 A **called draw** decides whose turn it is, or who is admitted when a thing is
 oversubscribed, **without anyone choosing**. The result is a pure function of
@@ -219,8 +219,8 @@ SHA-256 over UTF-8, hex output, lowercase. The salt is at least 16 bytes of hex
 (the reference generates 32) and is lowercased before hashing.
 
 ```
-rosterCommitment(roster, salt) = SHA256( "b-call/roster/v1\n" + salt + "\n" + JSON(roster) )
-seedCommitment(seed, salt)     = SHA256( "b-call/seed/v1\n"   + salt + "\n" + decimal(uint32(seed)) )
+rosterCommitment(roster, salt) = SHA256( "called-draw/v1/roster\n" + salt + "\n" + JSON(roster) )
+seedCommitment(seed, salt)     = SHA256( "called-draw/v1/seed\n"   + salt + "\n" + decimal(uint32(seed)) )
 ```
 
 `JSON(roster)` is the ordered array of identifier strings with no whitespace,
@@ -248,7 +248,7 @@ equal and say nothing.
 
 ## 8. Conformance and versioning
 
-`vectors/b-call-vectors.json` carries:
+`vectors/b-called-vectors.json` carries:
 
 | Case | Checks |
 | --- | --- |
@@ -330,7 +330,7 @@ sealed order, a roster that changes between rounds — use v2 (Part II).**
 
 # Part II — v2
 
-`@333eco/primitives/b-call/v2`. A new version, not an edit: no v1 output changes.
+`@333eco/primitives/b-called/v2`. A new version, not an edit: no v1 output changes.
 Every rule below answers a finding of the 2026-09-13 prior-art census, and a second
 implementation written from this Part alone (`scripts/port_check.py`, Python standard
 library) reproduces every v2 vector.
@@ -351,7 +351,7 @@ list(ids)   u32(count) ‖ str(id₁) ‖ … ‖ str(idₙ)
 ## 12. The commitment
 
 ```
-C = SHA-256( str("b-call/v2/commitment")
+C = SHA-256( str("called-draw/v2/commitment")
            ‖ str(lowercase(network))       # beacon chain hash, hex
            ‖ u64(round)                    # the beacon round, named now, emitted later
            ‖ str(drawId)                   # unique per draw
@@ -375,8 +375,8 @@ A tier boundary set after the order is known is a choice; here it is fixed first
 ## 13. The key and the streams
 
 ```
-K  = SHA-256( str("b-call/v2/key") ‖ bytes(C) ‖ bytes(randomness) ‖ bytes(salt) )
-Sₗ = HMAC-SHA-256( key = K,  msg = str("b-call/v2/stream") ‖ str(label) )
+K  = SHA-256( str("called-draw/v2/key") ‖ bytes(C) ‖ bytes(randomness) ‖ bytes(salt) )
+Sₗ = HMAC-SHA-256( key = K,  msg = str("called-draw/v2/stream") ‖ str(label) )
 Bᵢ = HMAC-SHA-256( key = Sₗ, msg = u64(i) )          # i = 0, 1, 2, …
 ```
 
@@ -471,7 +471,7 @@ This package does not bundle `tlock-js`, which would add five runtime dependenci
 
 ## 19. Conformance, ports and limits
 
-`vectors/b-call-v2-vectors.json` carries four consecutive real quicknet rounds
+`vectors/b-called-v2-vectors.json` carries four consecutive real quicknet rounds
 (1,000,000–1,000,003) and: a four-round public **season** with a roster change and
 chained closers · a round in which the **boundary swap fires** · a **sealed** turn · lots
 admitting 0, 3 and 10 of 10 · 20 raw stream values · a round time. `scripts/port_check.py`

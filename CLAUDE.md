@@ -1,18 +1,18 @@
 # CLAUDE.md — primitives.333.eco
 
-Implementation notes only. Doctrine for B-Call℠ is canonical in memory
+Implementation notes only. Doctrine for B-Called℠ is canonical in memory
 (`project_b_call`); where this file and memory disagree, memory wins.
 
 ## What this repo is
 
 `@333eco/primitives` — **public**, CC0, zero runtime dependencies. One module per
-recomputable primitive. First and only module: `b-call` (the called draw).
+recomputable primitive. First and only module: `b-called` (the called draw).
 Not a site; no host. Lives under `333.eco` for the reason brand and the registry
 do: it serves every body and names none.
 
 ## Rules that bite
 
-- ⛔ **Never change output for a seed already used.** `src/b-call.ts` §1–3 are
+- ⛔ **Never change output for a seed already used.** `src/b-called.ts` §1–3 are
   byte-identical to sey's caller; the suite checks against `@333eco/sey@1.0.0`
   (devDependency, EXACT pin) before its own vectors. A change is a new versioned
   form with a new commitment prefix, never an edit.
@@ -22,7 +22,7 @@ do: it serves every body and names none.
   measured 0.086% position gradient, a seed recoverable from ~7 turns, and a
   "second stream" that is a lagged copy (min 7,179 draws). A fix is v2 — a new
   seed version — and waits on the founder's ruling (roadmap A128(c)).
-- ⭐ **v2 (`src/b-call-v2.ts`, SPEC Part II) is the form for value** — whole-beacon HMAC
+- ⭐ **v2 (`src/b-called-v2.ts`, SPEC Part II) is the form for value** — whole-beacon HMAC
   stream, one binding commitment, per-round frozen rosters, a uniform boundary SWAP.
   `scripts/port_check.py` is its independent port and runs in `npm test`; ⛔ never
   "fix" a vector to match the TS without the port agreeing. ⛔ **Never publish a sealed
