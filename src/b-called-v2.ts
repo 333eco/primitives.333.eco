@@ -110,18 +110,7 @@ export async function draw(input: DrawInput, randomness: string): Promise<Draw> 
     assertHex(randomness, 32, "beacon randomness");
     const commitment = hex(await sha256(encodeCommitment(input)));
     const key = await sha256(concat(str("b-called/v2/key"), field(fromHex(commitment)), field(fromHex(randomness)), field(fromHex(input.salt))));
-    const next = await stream(key, "order");
-    const order = input.roster.slice();
-    for (let i = order.length - 1; i > 0; i--) {
-        const j = await uniformIndex(next, i + 1);
-        [order[i], order[j]] = [order[j], order[i]];
-    }
-    let boundarySwapped = false;
-    if (input.form === "turn" && input.previousLast != null && order.length > 1 && order[0] === input.previousLast) {
-        const j = 1 + (await uniformIndex(next, order.length - 1));
-        [order[0], order[j]] = [order[j], order[0]];
-        boundarySwapped = true;
-    }
+    const { order, boundarySwapped } = await shuffleWithKey(key, input.roster, input.form === "turn" ? (input.previousLast ?? null) : null);
     const out: Draw = { commitment, order };
     if (input.form === "lot") out.admitted = order.slice(0, input.admit!);
     else out.boundarySwapped = boundarySwapped;
@@ -139,6 +128,41 @@ export async function verify(publishedCommitment: string, input: DrawInput, rand
         throw new Error("revealed inputs do not match the published commitment");
     }
     return d;
+}
+
+// ── a draw from a key you already hold ──────────────────────────────────────
+// For a surface that is NOT a public or sealed B-Called draw — no beacon, no
+// commitment — but still wants v2's generator and boundary rule: a play-only,
+// offline surface seeding itself locally (SPEC §5(c)), such as sey's circle.
+// ⚠️ A locally held seed is the holder's: this is recomputable, never
+// operator-independent. For anything worth something, use commit/draw/verify.
+
+/**
+ * A per-round key from a local 32-byte seed: HMAC-SHA-256(seed, str(tag) ‖ str(label) ‖ u64(index)).
+ * Separate labels are independent streams (a circle's receivers and its callers).
+ */
+export async function roundKey(seedHex: string, label: string, index: number): Promise<string> {
+    assertHex(seedHex, 32, "seed");
+    if (typeof label !== "string" || label.length === 0) throw new TypeError("label must be a non-empty string");
+    if (!Number.isSafeInteger(index) || index < 0) throw new RangeError("index must be a non-negative safe integer");
+    return hex(await hmac(fromHex(seedHex), concat(str("b-called/v2/round"), str(label), u64(index))));
+}
+
+/**
+ * One round's order under a 32-byte key: v2's shuffle and its uniform boundary swap,
+ * exactly as `draw` applies them after deriving its key from a commitment.
+ */
+export async function orderFromKey(
+    keyHex: string,
+    roster: readonly string[],
+    previousLast: string | null = null
+): Promise<{ order: string[]; boundarySwapped: boolean }> {
+    assertHex(keyHex, 32, "key");
+    assertRoster(roster);
+    if (previousLast != null && (typeof previousLast !== "string" || previousLast.length === 0)) {
+        throw new TypeError("previousLast must be a non-empty string or null");
+    }
+    return shuffleWithKey(fromHex(keyHex), roster, previousLast);
 }
 
 /** Unix seconds at which `round` is emitted. A commitment must be published before this. */
@@ -231,6 +255,34 @@ async function stream(key: Bytes, label: string): Promise<() => Promise<number>>
     };
 }
 
+async function shuffleWithKey(key: Bytes, roster: readonly string[], previousLast: string | null): Promise<{ order: string[]; boundarySwapped: boolean }> {
+    const next = await stream(key, "order");
+    const order = roster.slice();
+    for (let i = order.length - 1; i > 0; i--) {
+        const j = await uniformIndex(next, i + 1);
+        [order[i], order[j]] = [order[j], order[i]];
+    }
+    let boundarySwapped = false;
+    if (previousLast != null && order.length > 1 && order[0] === previousLast) {
+        const j = 1 + (await uniformIndex(next, order.length - 1));
+        [order[0], order[j]] = [order[j], order[0]];
+        boundarySwapped = true;
+    }
+    return { order, boundarySwapped };
+}
+
+function assertRoster(roster: readonly string[]): void {
+    if (!Array.isArray(roster) || roster.length === 0) throw new TypeError("roster must be a non-empty array");
+    const seen = new Set<string>();
+    for (const id of roster) {
+        if (typeof id !== "string" || id.length === 0) throw new TypeError("roster ids must be non-empty strings");
+        // A duplicate is an extra turn. One entry per principal is the caller's
+        // guard; refusing a duplicate id is this module's.
+        if (seen.has(id)) throw new TypeError(`duplicate roster id: ${id}`);
+        seen.add(id);
+    }
+}
+
 function validate(i: DrawInput): void {
     assertHex(i.network, 32, "network");
     assertRound(i.round);
@@ -238,15 +290,7 @@ function validate(i: DrawInput): void {
     if (i.form !== "turn" && i.form !== "lot") throw new TypeError("form must be turn or lot");
     if (i.regime !== "public" && i.regime !== "sealed") throw new TypeError("regime must be public or sealed");
     assertHex(i.salt, 32, "salt");
-    if (!Array.isArray(i.roster) || i.roster.length === 0) throw new TypeError("roster must be a non-empty array");
-    const seen = new Set<string>();
-    for (const id of i.roster) {
-        if (typeof id !== "string" || id.length === 0) throw new TypeError("roster ids must be non-empty strings");
-        // A duplicate is an extra turn. One entry per principal is the caller's
-        // guard; refusing a duplicate id is this module's.
-        if (seen.has(id)) throw new TypeError(`duplicate roster id: ${id}`);
-        seen.add(id);
-    }
+    assertRoster(i.roster);
     if (i.form === "turn") {
         if (i.admit !== undefined) throw new TypeError("admit belongs to the lot form");
         if (i.previousLast != null && (typeof i.previousLast !== "string" || i.previousLast.length === 0)) {

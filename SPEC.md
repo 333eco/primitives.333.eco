@@ -434,6 +434,26 @@ lapses. Absence is **never** a removal from the round's shuffle input, and nothi
 about who was present reaches any later round except through that round's own frozen
 roster. A member who joins or leaves does so at the next cutoff.
 
+### 16a. A season keyed by a seed you hold (play only)
+
+For a surface that is **not** a public or sealed B-Called draw — no beacon, no
+commitment — but wants v2's generator and boundary rule: a play-only surface that
+must work offline and seeds itself locally (§5(c)).
+
+```
+roundKey(seed, label, index) = HMAC-SHA-256( key = hex-decode(seed),       # 32 bytes
+                                             msg = str("b-called/v2/round") ‖ str(label) ‖ u64(index) )
+orderFromKey(key, roster, previousLast) = §15, with K := hex-decode(key)
+```
+
+Each `label` is an independent stream (a circle's `"receivers"` and its `"callers"`);
+round `index` counts from 0; `previousLast` chains from the previous round's order
+exactly as in §16. `draw` (§15) is `orderFromKey` under the commitment-derived key.
+
+⚠️ **A locally held seed belongs to whoever holds it.** A keyed season is
+recomputable, never operator-independent: use it for play order, never for a
+benefit. Vectors: `keyed_season`, `keyed_boundary_swap`.
+
 ## 17. The two regimes
 
 The algorithm is identical; the regime decides **what is disclosed, to whom, and when.**

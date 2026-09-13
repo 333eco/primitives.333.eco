@@ -93,6 +93,10 @@ const { order, boundarySwapped } = await draw(input, randomnessOfThatRound);
 await verify(commitment, input, randomnessOfThatRound);
 ```
 
+For a play-only surface that seeds itself offline, `roundKey(seed, label, index)` and
+`orderFromKey(key, roster, previousLast)` give v2's draw and boundary rule under a key
+you hold — recomputable, but never operator-independent (`SPEC.md` §16a).
+
 A sealed draw publishes only the commitment. Its inputs go to the verifying quorum,
 encrypted to them and then time-locked to the reset round. Never publish its salt.
 See `SPEC.md` §17.

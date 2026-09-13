@@ -133,6 +133,36 @@ for name, case in draw_cases():
             expect(got.get(k) == case.get(k), f"{name}: {k} differs — port {got.get(k)} vs vector {case.get(k)}")
     n_draws += 1
 
+# §16a — a locally keyed season: roundKey = HMAC(seed, str(tag) ‖ str(label) ‖ u64(index)); the order is §15 under that key.
+def round_key(seed_hex, label, index):
+    return hmac.new(bytes.fromhex(seed_hex), s("b-called/v2/round") + s(label) + u64(index), hashlib.sha256).hexdigest()
+
+def order_from_key(key_hex, roster, previous_last):
+    it = stream(bytes.fromhex(key_hex), "order")
+    order = list(roster)
+    for i in range(len(order) - 1, 0, -1):
+        j = uniform(it, i + 1)
+        order[i], order[j] = order[j], order[i]
+    swapped = False
+    if previous_last is not None and len(order) > 1 and order[0] == previous_last:
+        j = 1 + uniform(it, len(order) - 1)
+        order[0], order[j] = order[j], order[0]
+        swapped = True
+    return order, swapped
+
+ks = VECTORS["cases"]["keyed_season"]
+for r in ks["rounds"]:
+    expect(round_key(ks["seed"], r["label"], r["index"]) == r["key"], f"keyed season round {r['index']}: roundKey differs")
+    o, sw = order_from_key(r["key"], r["roster"], r["previousLast"])
+    expect(o == r["order"] and sw == r["boundarySwapped"], f"keyed season round {r['index']}: order differs")
+    n_draws += 1
+expect(round_key(ks["seed"], "callers", 0) == ks["callersRound0Key"], "callers label key differs")
+expect(round_key(ks["seed"], "callers", 0) != ks["rounds"][0]["key"], "labels must separate streams")
+kb = VECTORS["cases"]["keyed_boundary_swap"]
+o, sw = order_from_key(kb["key"], kb["roster"], kb["previousLast"])
+expect(sw is True and o == kb["order"], "keyed boundary swap differs or did not fire")
+n_draws += 1
+
 # The season's chaining: each round's previousLast is the previous round's closer.
 rounds = VECTORS["cases"]["season_public_turns"]["rounds"]
 for a, b in zip(rounds, rounds[1:]):
@@ -163,7 +193,7 @@ controls.append(("a lot whose admit count changed after commit", commitment(tamp
 for what, caught in controls:
     expect(caught, f"CONTROL NOT CAUGHT: {what}")
 
-if n_draws < 7:
+if n_draws < 14:
     failures.append(f"only {n_draws} draw cases were checked — the vectors file lost cases")
 
 if failures:

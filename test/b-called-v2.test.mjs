@@ -115,6 +115,41 @@ test("the module offers no seed maker, no weights and no presence input", async 
     assert.deepEqual(d.order, plain.order, "extra fields must change nothing — there is nowhere for a weight or a presence list to go");
 });
 
+// ── a draw from a key you already hold (§16a) ────────────────────────────────
+
+test("keyed season vectors recompute, and labels separate streams", async () => {
+    const ks = V.cases.keyed_season;
+    assert.equal(ks.rounds.length, 4);
+    for (const r of ks.rounds) {
+        assert.equal(await v2.roundKey(ks.seed, r.label, r.index), r.key);
+        assert.deepEqual(await v2.orderFromKey(r.key, r.roster, r.previousLast), { order: r.order, boundarySwapped: r.boundarySwapped });
+    }
+    assert.equal(await v2.roundKey(ks.seed, "callers", 0), ks.callersRound0Key);
+    assert.notEqual(ks.callersRound0Key, ks.rounds[0].key);
+    const kb = V.cases.keyed_boundary_swap;
+    assert.deepEqual(await v2.orderFromKey(kb.key, kb.roster, kb.previousLast), { order: kb.order, boundarySwapped: true });
+});
+
+test("draw is orderFromKey under the commitment-derived key — one shuffle, not two", async () => {
+    // Recompute a draw vector's order through the public keyed API: derive K exactly as SPEC §13 says.
+    const c = V.cases.turn_boundary_swap;
+    const enc = new TextEncoder();
+    const field = (b) => { const o = new Uint8Array(4 + b.length); new DataView(o.buffer).setUint32(0, b.length); o.set(b, 4); return o; };
+    const hexb = (h) => Uint8Array.from(h.match(/../g).map((x) => parseInt(x, 16)));
+    const cat = (...ps) => { const o = new Uint8Array(ps.reduce((s, p) => s + p.length, 0)); let i = 0; for (const p of ps) { o.set(p, i); i += p.length; } return o; };
+    const K = new Uint8Array(await crypto.subtle.digest("SHA-256", cat(field(enc.encode("b-called/v2/key")), field(hexb(c.commitment)), field(hexb(c.randomness)), field(hexb(c.input.salt)))));
+    const Khex = [...K].map((b) => b.toString(16).padStart(2, "0")).join("");
+    assert.deepEqual((await v2.orderFromKey(Khex, c.input.roster, c.input.previousLast)).order, c.order);
+});
+
+test("keyed inputs are validated", async () => {
+    await assert.rejects(v2.roundKey("ab".repeat(16), "receivers", 0), /seed/);
+    await assert.rejects(v2.roundKey("ab".repeat(32), "", 0), /label/);
+    await assert.rejects(v2.roundKey("ab".repeat(32), "x", -1), RangeError);
+    await assert.rejects(v2.orderFromKey("ab".repeat(32), ["a", "a"]), /duplicate/);
+    await assert.rejects(v2.orderFromKey("ab", ["a"]), /key/);
+});
+
 // ── rejection sampling ───────────────────────────────────────────────────────
 
 test("uniformIndex rejects the tail, scripted", async () => {

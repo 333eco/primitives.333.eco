@@ -194,6 +194,28 @@ for (const admit of [0, 3, 10]) {
     out2.cases[`lot_admit_${admit}`] = { input, randomness: ROUNDS[1000002].randomness, ...(await v2.draw(input, ROUNDS[1000002].randomness)) };
 }
 
+// A locally keyed season (SPEC §16a): per-round keys from one 32-byte seed, two labels,
+// chained closers. The shape sey's circles use — a local seed, so recomputable, never
+// operator-independent.
+{
+    const seed = vsalt("local-season-seed");
+    const rounds = [];
+    let previousLast = null;
+    for (let r = 0; r < 4; r++) {
+        const key = await v2.roundKey(seed, "receivers", r);
+        const roster = pk(5);
+        const { order, boundarySwapped } = await v2.orderFromKey(key, roster, previousLast);
+        rounds.push({ label: "receivers", index: r, key, roster, previousLast, order, boundarySwapped });
+        previousLast = order[order.length - 1];
+    }
+    out2.cases.keyed_season = { note: "roundKey(seed, label, index) then orderFromKey(key, roster, previousLast)", seed, rounds, callersRound0Key: await v2.roundKey(seed, "callers", 0) };
+}
+// A keyed round in which the boundary swap fires, found by search and recorded.
+for (let k = 0; ; k++) {
+    const key = await v2.roundKey(vsalt("keyed-boundary"), "receivers", k);
+    const d = await v2.orderFromKey(key, pk(4), "p3");
+    if (d.boundarySwapped) { out2.cases.keyed_boundary_swap = { index: k, key, roster: pk(4), previousLast: "p3", ...d }; break; }
+}
 out2.cases.stream = { key: vsalt("stream-key"), label: "order", uint32: await v2.streamUint32(vsalt("stream-key"), "order", 20) };
 out2.cases.round_time = { chain: "quicknet", round: 1000000, unixSeconds: v2.roundTime(v2.QUICKNET, 1000000) };
 

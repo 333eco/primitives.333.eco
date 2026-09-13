@@ -348,6 +348,115 @@
         "p3"
       ]
     },
+    "keyed_season": {
+      "note": "roundKey(seed, label, index) then orderFromKey(key, roster, previousLast)",
+      "seed": "ae34650a5a090a28183600cbb09e7e5145945cf7495ed39315ba674508128563",
+      "rounds": [
+        {
+          "label": "receivers",
+          "index": 0,
+          "key": "06e3da847d20d7dfb29b80d68dcaf801df778d05610323899684a879241862d1",
+          "roster": [
+            "p0",
+            "p1",
+            "p2",
+            "p3",
+            "p4"
+          ],
+          "previousLast": null,
+          "order": [
+            "p0",
+            "p3",
+            "p1",
+            "p2",
+            "p4"
+          ],
+          "boundarySwapped": false
+        },
+        {
+          "label": "receivers",
+          "index": 1,
+          "key": "e68ce3a97ee2eb98f32beecfe91a3f70ae99fcdde1b6843df8545611ab975bac",
+          "roster": [
+            "p0",
+            "p1",
+            "p2",
+            "p3",
+            "p4"
+          ],
+          "previousLast": "p4",
+          "order": [
+            "p2",
+            "p1",
+            "p3",
+            "p4",
+            "p0"
+          ],
+          "boundarySwapped": false
+        },
+        {
+          "label": "receivers",
+          "index": 2,
+          "key": "2a53f9adcb0b6567bc508822b9d111e6e6bc4f414716136ccd55487e87e5e2cf",
+          "roster": [
+            "p0",
+            "p1",
+            "p2",
+            "p3",
+            "p4"
+          ],
+          "previousLast": "p0",
+          "order": [
+            "p1",
+            "p0",
+            "p3",
+            "p2",
+            "p4"
+          ],
+          "boundarySwapped": false
+        },
+        {
+          "label": "receivers",
+          "index": 3,
+          "key": "4c41e52f0b970038d7fe1dc4c2b53a217eff4209ea0b15e684415fe10cc1e24e",
+          "roster": [
+            "p0",
+            "p1",
+            "p2",
+            "p3",
+            "p4"
+          ],
+          "previousLast": "p4",
+          "order": [
+            "p1",
+            "p3",
+            "p2",
+            "p0",
+            "p4"
+          ],
+          "boundarySwapped": true
+        }
+      ],
+      "callersRound0Key": "48c302728d51e25d4db754c287eeaa562997cce00a2646f8636911a14ed453c2"
+    },
+    "keyed_boundary_swap": {
+      "index": 0,
+      "key": "90d34dfffb1407f8327d74d149d1f490a7c9e0eaba35efab6de46c49af9cb8b0",
+      "roster": [
+        "p0",
+        "p1",
+        "p2",
+        "p3"
+      ],
+      "previousLast": "p3",
+      "order": [
+        "p1",
+        "p3",
+        "p2",
+        "p0"
+      ],
+      "boundarySwapped": true
+    },
     "stream": {
       "key": "ab45295f63c85851c458c5e1bb874edd0d198684afff6c3c32b5d7ea1e105d1e",
       "label": "order",
