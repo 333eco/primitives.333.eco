@@ -19,6 +19,7 @@ const PUBLIC_API = [
     "./b-called/vectors.json",
     "./b-called/v2/vectors.json",
     "./b-called/SPEC.md",
+    "./b-tag-anchor",
     "./package.json"
 ];
 

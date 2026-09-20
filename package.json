@@ -1,7 +1,7 @@
 {
     "name": "@333eco/primitives",
-    "version": "1.1.0",
-    "description": "Recomputable primitives from 333.eco. First module: B-Called℠, the called draw — whose turn it is, or who is admitted, as a pure function of a committed roster and a seed no party controls. CC0, zero runtime dependencies, bit-identical conformance vectors.",
+    "version": "1.2.0",
+    "description": "Recomputable primitives from 333.eco. B-Called℠, the called draw — whose turn it is, or who is admitted, as a pure function of a committed roster and a seed no party controls. And b-tag-anchor — a suggested thanks on goods already received, as a pure function of the GOODS with no argument identifying the viewer. CC0, zero runtime dependencies, bit-identical conformance vectors.",
     "license": "CC0-1.0",
     "author": "Thon Ly",
     "homepage": "https://github.com/333eco/primitives.333.eco#readme",
@@ -24,7 +24,11 @@
         "mulberry32",
         "fisher-yates",
         "cc0",
-        "public-domain"
+        "public-domain",
+        "suggested-tip",
+        "anchor",
+        "viewer-blind",
+        "deterministic"
     ],
     "type": "module",
     "exports": {
@@ -43,7 +47,11 @@
         "./b-called/vectors.json": "./vectors/b-called-vectors.json",
         "./b-called/v2/vectors.json": "./vectors/b-called-v2-vectors.json",
         "./b-called/SPEC.md": "./SPEC.md",
-        "./package.json": "./package.json"
+        "./package.json": "./package.json",
+        "./b-tag-anchor": {
+            "types": "./dist/b-tag-anchor.d.ts",
+            "default": "./dist/b-tag-anchor.js"
+        }
     },
     "files": [
         "dist",
@@ -57,7 +65,7 @@
     "scripts": {
         "build": "rm -rf dist && tsc -p tsconfig.json",
         "vectors": "npm run build && node scripts/generate-vectors.mjs",
-        "test": "npm run build && node --test test/b-called.test.mjs test/b-called-v2.test.mjs test/exports.test.mjs && python3 scripts/port_check.py",
+        "test": "npm run build && node --test test/b-called.test.mjs test/b-called-v2.test.mjs test/b-tag-anchor.test.mjs test/exports.test.mjs && python3 scripts/port_check.py",
         "prepublishOnly": "npm test"
     },
     "devDependencies": {

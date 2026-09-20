@@ -27,6 +27,16 @@ do: it serves every body and names none.
   `scripts/port_check.py` is its independent port and runs in `npm test`; ⛔ never
   "fix" a vector to match the TS without the port agreeing. ⛔ **Never publish a sealed
   draw's salt** (C + salt confirms a guessed roster). tlock is NOT bundled (5 deps).
+- ⭐ **`b-tag-anchor` (1.2.0) is the SECOND module, and its guard is the SIGNATURE.** Directive #63
+  is HARD: wherever she produces a number on a shop surface — *including a B-Tag, where nothing
+  binds* — her function gets the state of the GOODS and **no argument identifying the viewer**.
+  ⛔ **Never add one.** A viewer-aware variant would be a new exported function under a new name,
+  so the published signature stays true; the suite proves the guard by keying a mutant to a uid
+  and watching the blindness test fail. ⛔ **No clock, no RNG** — `hour` is an argument.
+  ⛔ **Nothing derived from `cost` may enter the return value**: merchants disclose a cost basis,
+  customers see an amount and reason CODES, and the decomposition is unrenderable because it is
+  never handed over. ⚠️ The coefficients and the KHR ladder are a **starting rule set, not a
+  finding** — they were written by the substrate and are a hypothesis to be measured.
 - ⚠️ **Mutation-test with an apply check** — a mutation whose anchor is absent from
   `dist/` leaves the file unchanged and reads as a pass.
 - ⚠️ **Regenerate vectors after any src change** (`npm run vectors`); CI fails

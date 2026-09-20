@@ -101,6 +101,42 @@ A sealed draw publishes only the commitment. Its inputs go to the verifying quor
 encrypted to them and then time-locked to the reset round. Never publish its salt.
 See `SPEC.md` §17.
 
+## b-tag-anchor — a suggested thanks that cannot see who is asking
+
+On a B-Tag item nothing binds: the customer already holds the goods, owes nothing, and may
+ignore any suggestion entirely. That is the one mode in which a recommender has the most
+discretion and the least constraint — so the guard cannot be a range, and is instead a
+property of the function signature.
+
+```js
+import { anchorFor } from "@333eco/primitives/b-tag-anchor";
+
+anchorFor({ itemType: "coffee", currency: "KHR", regionalTypical: 1000, prep: 8 });
+// → { amount: 1000, reasons: ["regional-norm", "made-to-order"], ladder: [...] }
+```
+
+**There is no viewer argument, so per-person pricing is inexpressible rather than
+forbidden.** The function is given the state of the *goods* — what it is, what the merchant
+says it costs them, what comparable things go for in the region, how long it takes, how
+late in the day it is, how much is left — and nothing whatsoever that identifies a person.
+Publishing the signature is what makes that checkable by anyone instead of promised.
+
+Three more properties, each tested:
+
+- **Deterministic.** No clock, no RNG, no network, no state. `hour` is an argument, not a
+  reading. The same goods yield the same anchor forever, so a recommendation can be
+  recomputed and argued with long after it was shown.
+- **The cost basis never reaches the output.** Merchants disclose what something costs
+  them; customers see an amount and *reasons*. Reasons are codes, and no figure derived
+  from the cost appears in the return value — the decomposition is unrenderable because it
+  is never handed over.
+- **Down, not up, when goods are scarce or late.** The last of the pot anchors *lower*.
+  Scarcity here is a fact about the goods, not a lever.
+
+An anchor is not a price, and it is not advice. It is a starting rule set whose numbers are
+a hypothesis: bounded (always a rung of a short ladder), capped against a merchant inflating
+their own inputs, and absent rather than guessed for a currency it has no ladder for.
+
 ## Conformance
 
 [`SPEC.md`](./SPEC.md) is normative — Part I for v1 (with Swift and Kotlin ports of

@@ -4,3 +4,4 @@
 // dead end.
 export * as bCalled from "./b-called.js";
 export * as bCalledV2 from "./b-called-v2.js";
+export * as bTagAnchor from "./b-tag-anchor.js";
