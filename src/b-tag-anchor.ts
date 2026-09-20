@@ -27,6 +27,14 @@
  */
 
 /** The ladder an anchor is chosen from, per currency, in the currency's own unit. */
+/**
+ * ⚠️⚠️ A THANKS IS A FRACTION OF A PRICE, NEVER A PRICE. This number is the substrate's, not the
+ * founder's, and it is a STARTING RULE SET rather than a finding — it lands the anchor on the same
+ * rung the walkthrough and the artboard both drew (1,000៛ on a 4,000៛ coffee), which is a sanity
+ * check and not evidence. ⛔ Treat any change to it as a change to a live experiment.
+ */
+const THANKS_FRACTION = 0.25;
+
 const LADDERS: Record<string, number[]> = {
     // ⭐ Riel, as they are actually handled: the notes a student carries. ⛔ Not a linear scale —
     //   an anchor that lands on 1,300៛ is a number nobody hands over.
@@ -46,8 +54,10 @@ export type ReasonCode =
     | "end-of-day"
     /** little left of it */
     | "nearly-gone"
-    /** the anchor sits where comparable items in this region are posted */
+    /** the anchor sits where people around here thank for this kind of thing */
     | "regional-norm"
+    /** the anchor is a modest share of what the item itself cost */
+    | "share-of-price"
     /** the merchant disclosed what it costs them and the anchor clears it */
     | "covers-cost";
 
@@ -61,7 +71,20 @@ export interface Goods {
      * rendered to a customer. Absent when they have not disclosed it.
      */
     cost?: number;
-    /** A comparable posted price for this `itemType` in this region, when one is known. */
+    /**
+     * What the item itself costs a customer, in the currency's own unit — its binding price, when
+     * it has one. ⛔ A B-Tag has none, which is the whole point of the mode.
+     *
+     * ⚠️⚠️ A THANKS IS A FRACTION OF THIS, NEVER THIS. Version 1.2.0 anchored *at* a posted price,
+     * which would have suggested thanking the entire bill a second time. Caught before any
+     * surface called it; the fraction below is the fix, and the field was renamed so that a caller
+     * written against the old meaning fails loudly rather than quietly doubling someone's bill.
+     */
+    posted?: number;
+    /**
+     * What people in this region typically THANK for this kind of item — ⛔ not what it sells for.
+     * Unknown at n = 0 and meant to stay absent until it is measured rather than assumed.
+     */
     regionalTypical?: number;
     /** Minutes the owner set for this variant. A Mini is not an L. */
     prep?: number;
@@ -99,10 +122,22 @@ export function anchorFor(goods: Goods): Anchor | null {
 
     const reasons: ReasonCode[] = [];
 
-    // ⭐ Start at the region, not at the cost. What comparable things go for is the honest centre;
-    //   the merchant's own cost is a FLOOR below which the anchor should not sit, never the target.
-    let target = goods.regionalTypical ?? ladder[Math.floor(ladder.length / 2)];
-    if (goods.regionalTypical !== undefined) reasons.push("regional-norm");
+    // ⭐ Start where the honest centre is, in this order of preference:
+    //   1. what people around here actually thank for this kind of thing (measured, not assumed)
+    //   2. a FRACTION of what the item itself costs — ⛔ never the whole of it
+    //   3. failing both, a modest rung, because a suggestion with nothing behind it should be
+    //      small rather than confident.
+    // ⚠️ A B-Tag reaches case 3 by definition: nothing binds, so there is no posted number.
+    let target: number;
+    if (goods.regionalTypical !== undefined) {
+        target = goods.regionalTypical;
+        reasons.push("regional-norm");
+    } else if (goods.posted !== undefined && goods.posted > 0) {
+        target = goods.posted * THANKS_FRACTION;
+        reasons.push("share-of-price");
+    } else {
+        target = ladder[1] ?? ladder[0];
+    }
 
     // ⚠️ Effort moves the anchor UP, and it is capped on purpose. `prep` is owner-authored, so an
     //   uncapped rule would let a shop inflate every suggestion by editing one field.

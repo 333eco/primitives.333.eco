@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { anchorFor, anchoredCurrencies } from "../dist/b-tag-anchor.js";
 
-const coffee = { itemType: "coffee", currency: "KHR", regionalTypical: 1000 };
+const coffee = { itemType: "coffee", currency: "KHR", posted: 4000 };
 
 // ─────────────────────────────────────────────────────────────────────────────
 // #63 — the directive this module exists to make CHECKABLE rather than promised.
@@ -81,11 +81,12 @@ test("the amount is ALWAYS a rung of the ladder", () => {
     // A wide sweep, including inputs a shop could set carelessly or dishonestly.
     for (const prep of [undefined, 0, 4, 5, 11, 12, 90])
         for (const cost of [undefined, 1, 600, 1337, 999999])
-            for (const regionalTypical of [undefined, 300, 1000, 4000, 100000])
+            for (const posted of [undefined, 300, 1000, 4000, 100000])
+              for (const regionalTypical of [undefined, 800, 90000])
                 for (const hour of [undefined, 6, 17])
                     for (const stockLeft of [undefined, 0, 2, 50]) {
                         const a = anchorFor({ itemType: "coffee", currency: "KHR",
-                            prep, cost, regionalTypical, hour, closingHour: 18, stockLeft });
+                            prep, cost, posted, regionalTypical, hour, closingHour: 18, stockLeft });
                         assert.ok(a, "KHR must always answer");
                         assert.ok(a.ladder.includes(a.amount),
                             `${a.amount} is not a rung of ${a.ladder}`);
@@ -138,7 +139,7 @@ test("reasons are present whenever a factor actually fired", () => {
     const bare = anchorFor({ itemType: "coffee", currency: "KHR" });
     assert.deepEqual(bare.reasons, [], "a bare item should claim no reasons it does not have");
     const reasoned = anchorFor({ ...coffee, prep: 14 });
-    assert.ok(reasoned.reasons.includes("regional-norm"));
+    assert.ok(reasoned.reasons.includes("share-of-price"));
     assert.ok(reasoned.reasons.includes("takes-time"));
 });
 
@@ -166,4 +167,41 @@ test("CONTROL · the ladder test can fail", () => {
     const offLadder = { amount: 1337, ladder: [500, 1000] };
     assert.ok(!offLadder.ladder.includes(offLadder.amount),
         "the ladder check cannot see an off-ladder amount — the real test proves nothing");
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// ⚠️⚠️ THE BUG 1.2.0 SHIPPED WITH, pinned so it cannot come back. That version
+// anchored AT a posted price, which on a 4,000៛ coffee would have suggested
+// thanking 4,000៛ — the entire bill, a second time, on the one screen whose
+// whole argument is that nothing is owed. Caught before any surface called it.
+// ─────────────────────────────────────────────────────────────────────────────
+
+test("⛔⛔ a thanks is a FRACTION of the price, never the price", () => {
+    for (const posted of [1000, 3000, 4000, 5000, 15000, 22000]) {
+        const a = anchorFor({ itemType: "coffee", currency: "KHR", posted });
+        assert.ok(a.amount < posted,
+            `anchored ${a.amount} on an item costing ${posted} — that is the bill again`);
+        assert.ok(a.amount <= posted * 0.5,
+            `anchored ${a.amount} on ${posted}: over half the bill is not a thanks`);
+    }
+});
+
+test("the artboard's own case lands where the artboard drew it", () => {
+    // 4,000៛ Iced Americano → the middle chip, which is what the walkthrough showed.
+    const a = anchorFor({ itemType: "coffee", currency: "KHR", posted: 4000 });
+    assert.equal(a.amount, 1000);
+    assert.ok(a.reasons.includes("share-of-price"));
+});
+
+test("⭐ a B-Tag has no posted number, so the anchor stays modest", () => {
+    const a = anchorFor({ itemType: "coffee", currency: "KHR" });
+    assert.ok(a.amount <= 1000,
+        "with nothing behind it a suggestion should be small, not confident");
+    assert.deepEqual(a.reasons, []);
+});
+
+test("CONTROL · the fraction test can fail", () => {
+    const atPrice = { amount: 4000 };
+    assert.ok(!(atPrice.amount < 4000),
+        "the comparison cannot see an anchor set AT the price — the real test proves nothing");
 });

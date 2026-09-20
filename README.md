@@ -111,13 +111,13 @@ property of the function signature.
 ```js
 import { anchorFor } from "@333eco/primitives/b-tag-anchor";
 
-anchorFor({ itemType: "coffee", currency: "KHR", regionalTypical: 1000, prep: 8 });
-// → { amount: 1000, reasons: ["regional-norm", "made-to-order"], ladder: [...] }
+anchorFor({ itemType: "coffee", currency: "KHR", posted: 4000, prep: 8 });
+// → { amount: 1000, reasons: ["share-of-price", "made-to-order"], ladder: [...] }
 ```
 
 **There is no viewer argument, so per-person pricing is inexpressible rather than
 forbidden.** The function is given the state of the *goods* — what it is, what the merchant
-says it costs them, what comparable things go for in the region, how long it takes, how
+says it costs them, what people around here thank for it, how long it takes, how
 late in the day it is, how much is left — and nothing whatsoever that identifies a person.
 Publishing the signature is what makes that checkable by anyone instead of promised.
 
@@ -130,6 +130,10 @@ Three more properties, each tested:
   them; customers see an amount and *reasons*. Reasons are codes, and no figure derived
   from the cost appears in the return value — the decomposition is unrenderable because it
   is never handed over.
+- **A thanks is a fraction of a price, never a price.** 1.2.0 anchored *at* a posted number,
+  which on a 4,000៛ coffee would have suggested thanking the whole bill a second time, on the one
+  screen whose argument is that nothing is owed. The field was renamed in the fix so a caller
+  written against the old meaning fails loudly instead of quietly doubling someone's bill.
 - **Down, not up, when goods are scarce or late.** The last of the pot anchors *lower*.
   Scarcity here is a fact about the goods, not a lever.
 
