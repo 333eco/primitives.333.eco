@@ -463,7 +463,7 @@ The algorithm is identical; the regime decides **what is disclosed, to whom, and
 | At commit | `C`, and the salt, roster and fields beside it | `C` only — plus the sealed reveal below |
 | After the round | anyone runs `verify` | nobody outside the quorum can compute the order: the salt is inside the key |
 | At the reset | — | the **quorum** receives the reveal and runs `verify` |
-| Counts | may be public at any time | **only at round boundaries**, where a bag's counts are all equal and say nothing |
+| Counts | may be public at any time | **only at COMPLETED round boundaries**, where a bag's counts are all equal and say nothing — a season that ends mid-round has unequal counts, and the members one turn ahead are exactly that partial round's recipients, so a truncated final round's counts go to the quorum with the rest of the sealed inputs |
 
 **The sealed reveal**, published beside `C`: the draw's inputs (salt, roster and the
 committed fields), **encrypted to the quorum's recipients first, then time-locked to
