@@ -2,7 +2,7 @@
 
 Recomputable primitives from 333.eco — small functions whose output anyone can
 check without trusting whoever ran them. One module per primitive; no runtime
-dependencies; CC0.
+dependencies; CC0 or Apache-2.0, your choice.
 
 ```sh
 npm install @333eco/primitives
@@ -161,7 +161,7 @@ confirms the vectors catch each one.
 
 ## Licence and name
 
-The code, the specification and the vectors are **CC0 1.0** — see `LICENSE`.
+The code, the specification and the vectors are yours under **CC0 1.0 or Apache 2.0**, your choice: see `LICENSE`.
 The mechanism is free to implement under any name. **B-Called℠** is a service mark
 naming this reference implementation and its vectors; you may truthfully say an
 implementation of yours "passes the B-Called℠ vectors."
